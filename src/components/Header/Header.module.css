@@ -1,0 +1,20 @@
+.container {
+  position: relative;
+  height: 6.5rem;
+  border-bottom: 3px solid var(--color-sub);
+}
+
+.logo {
+  margin-top: 1rem;
+  margin-left: 3.75rem;
+  /* width: 12rem;
+  height: 4.5rem; */
+}
+
+.logout {
+  position: absolute;
+  top: 2.75rem;
+  right: 3.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
