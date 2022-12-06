@@ -5,7 +5,9 @@ import { useState, useEffect } from "react";
 
 const List = ({ list, setLists }) => {
   const [cards, setCards] = useState([]);
-  const [text, setText] = useState("");
+  const [cardText, setCardText] = useState("");
+  const [listText, setListText] = useState(list.name);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -17,14 +19,14 @@ const List = ({ list, setLists }) => {
     fetchCards();
   }, []);
 
-  const handleChange = (e) => setText(e.target.value);
+  const handleCardNameChange = (e) => setCardText(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { data } = await axios.post("http://localhost:3001/cards", {
       id: crypto.randomUUID(),
-      name: text,
+      name: cardText,
       desc: "",
       closed: false,
       pos: 65535,
@@ -54,9 +56,42 @@ const List = ({ list, setLists }) => {
     setLists((prev) => prev.filter((l) => l.id !== id));
   };
 
+  const enterEditMode = () => setEditing(true);
+
+  const handleListNameChange = (e) => setListText(e.target.value);
+
+  const editText = (id) => {
+    if (!listText.trim()) return;
+
+    setListText(listText.trim());
+
+    setLists((prev) =>
+      prev.map((l) => (l.id === list.id ? { ...l, name: listText } : l))
+    );
+
+    setEditing(false);
+    axios.patch(`http://localhost:3001/lists/${id}`, { name: listText });
+  };
+
+  const handleEnter = (e, id) => {
+    if (e.key === "Enter") editText(id);
+  };
+
   return (
     <>
-      <div>{list.name}</div>
+      {editing ? (
+        <input
+          value={listText}
+          onKeyUp={(e) => handleEnter(e, list.id)}
+          onChange={handleListNameChange}
+        />
+      ) : (
+        <span>{list.name}</span>
+      )}
+      <div>
+        <button onClick={() => deleteList(list.id)}>delete</button>
+        <button onClick={enterEditMode}>edit</button>
+      </div>
       {cards.map((card) => (
         <Card
           key={card.id}
@@ -67,10 +102,9 @@ const List = ({ list, setLists }) => {
       ))}
       <Form
         placeholder="Add a card"
-        onChange={handleChange}
+        onChange={handleCardNameChange}
         onSubmit={handleSubmit}
       />
-      <button onClick={() => deleteList(list.id)}>delete</button>
     </>
   );
 };
