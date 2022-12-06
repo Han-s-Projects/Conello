@@ -39,11 +39,21 @@ const List = ({ list }) => {
     setCards([...cards, data]);
   };
 
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:3001/cards/${id}`);
+
+    setCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
   return (
     <>
       <div>{list.name}</div>
       {cards.map((card) => (
-        <Card key={card.id} card={card} />
+        <Card
+          key={card.id}
+          card={card}
+          onDelete={() => handleDelete(card.id)}
+        />
       ))}
       <Form
         placeholder="Add a card"
