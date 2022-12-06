@@ -1,19 +1,6 @@
-import axios from "axios";
 import List from "pages/Board/List";
-import { useState, useEffect } from "react";
 
-const ListContainer = () => {
-  const [lists, setLists] = useState([]);
-
-  useEffect(() => {
-    const fetchLists = async () => {
-      const { data } = await axios.get("http://localhost:3001/lists");
-      setLists(data);
-    };
-
-    fetchLists();
-  }, []);
-
+const ListContainer = ({ lists }) => {
   return (
     <>
       {lists.map((list) => (
