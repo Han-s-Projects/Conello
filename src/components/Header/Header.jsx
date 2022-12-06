@@ -6,9 +6,7 @@ const Header = () => {
     <>
       <header className={styles.container}>
         <a href="/">
-          {/* <img className={styles.logo} src={logo} alt="logo" /> */}
-          <i className="icon-board" aria-hidden="true"></i>
-          로고
+          <img className={styles.logo} src={logo} alt="logo" />
         </a>
         <button className={styles.logout}>Log out</button>
       </header>
