@@ -6,7 +6,7 @@ const Board = () => {
   return (
     <>
       <Header />
-      <h1>My first board</h1>
+      <h1>My first bsard</h1>
       <Form placeholder={"Add a list"} />
       <ListContainer />
     </>
