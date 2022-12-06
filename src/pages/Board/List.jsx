@@ -3,7 +3,7 @@ import Card from "components/Card/Card";
 import Form from "components/Form/Form";
 import { useState, useEffect } from "react";
 
-const List = ({ list }) => {
+const List = ({ list, setLists }) => {
   const [cards, setCards] = useState([]);
   const [text, setText] = useState("");
 
@@ -43,6 +43,17 @@ const List = ({ list }) => {
     setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
+  const deleteList = (id) => {
+    axios.delete(`http://localhost:3001/lists/${id}`);
+
+    cards.forEach((card) => {
+      if (card.idList === id)
+        axios.delete(`http://localhost:3001/cards/${card.id}`);
+    });
+
+    setLists((prev) => prev.filter((l) => l.id !== id));
+  };
+
   return (
     <>
       <div>{list.name}</div>
@@ -59,6 +70,7 @@ const List = ({ list }) => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
+      <button onClick={() => deleteList(list.id)}>delete</button>
     </>
   );
 };

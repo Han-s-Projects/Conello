@@ -1,10 +1,10 @@
 import List from "pages/Board/List";
 
-const ListContainer = ({ lists }) => {
+const ListContainer = ({ lists, setLists }) => {
   return (
     <>
       {lists.map((list) => (
-        <List key={list.id} list={list} />
+        <List key={list.id} list={list} setLists={setLists} />
       ))}
     </>
   );

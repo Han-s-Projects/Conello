@@ -42,7 +42,7 @@ const Board = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <ListContainer lists={lists} />
+      <ListContainer lists={lists} setLists={setLists} />
     </>
   );
 };
