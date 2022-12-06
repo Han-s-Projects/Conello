@@ -1,7 +1,13 @@
-import React from "react";
+import List from "pages/Board/List";
 
-const ListContainer = () => {
-  return <div></div>;
+const ListContainer = ({ lists, setLists }) => {
+  return (
+    <>
+      {lists.map((list) => (
+        <List key={list.id} list={list} setLists={setLists} />
+      ))}
+    </>
+  );
 };
 
 export default ListContainer;
