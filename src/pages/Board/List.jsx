@@ -19,13 +19,37 @@ const List = ({ list }) => {
     fetchCards();
   }, []);
 
+  const handleChange = (e) => setText(e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { data } = await axios.post("http://localhost:3001/cards", {
+      id: crypto.randomUUID(),
+      name: text,
+      desc: "",
+      closed: false,
+      pos: 65535,
+      idBoard: "638afc978397000123346ccf",
+      idList: list.id,
+      dateLastActivity: new Date().toISOString(),
+      url: "https://trello.com/c/WhSROzo1/4-%EA%B5%AD%EC%96%B4",
+    });
+
+    setCards([...cards, data]);
+  };
+
   return (
     <>
       <div>{list.name}</div>
       {cards.map((card) => (
         <Card key={card.id} card={card} />
       ))}
-      <Form placeholder="Add a card" />
+      <Form
+        placeholder="Add a card"
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };
