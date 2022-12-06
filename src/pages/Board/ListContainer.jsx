@@ -8,12 +8,10 @@ const ListContainer = () => {
   useEffect(() => {
     const fetchLists = async () => {
       const { data } = await axios.get("http://localhost:3001/lists");
-      console.log("fetched lists: ", data);
       setLists(data);
     };
 
     fetchLists();
-    console.log("lists: ", lists);
   }, []);
 
   return (

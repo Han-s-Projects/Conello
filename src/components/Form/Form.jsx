@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const Form = ({ placeholder, onChange, onSubmit }) => {
   return (
     <form onSubmit={onSubmit}>

@@ -11,8 +11,6 @@ const List = ({ list }) => {
     const fetchCards = async () => {
       const { data } = await axios.get("http://localhost:3001/cards");
 
-      console.log("fetched cards: ", data);
-
       setCards(data.filter(({ idList }) => idList === list.id));
     };
 
@@ -53,6 +51,7 @@ const List = ({ list }) => {
           key={card.id}
           card={card}
           onDelete={() => handleDelete(card.id)}
+          setCards={setCards}
         />
       ))}
       <Form
