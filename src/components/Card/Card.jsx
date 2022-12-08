@@ -1,11 +1,31 @@
 import axios from "axios";
-import { useState } from "react";
+import Button from "components/Button/Button";
+import Menu from "components/Menu/Menu";
+import { useState, useEffect } from "react";
 
 const Card = ({ card, onDelete, setCards }) => {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(card.name);
+  const [isMenuActive, setIsMenuActive] = useState(false);
 
-  const enterEditMode = () => setEditing(true);
+  useEffect(() => {
+    const closeMenu = (e) => {
+      console.log(e.target.innerText);
+      if (e.target.innerText === "메뉴 토글" && isMenuActive)
+        setIsMenuActive(false);
+    };
+
+    window.addEventListener("click", closeMenu);
+
+    return () => {
+      window.removeEventListener("click", closeMenu);
+    };
+  }, [isMenuActive]);
+
+  const enterEditMode = () => {
+    setEditing(true);
+    setIsMenuActive(false);
+  };
 
   const editText = (id) => {
     if (!text.trim()) return;
@@ -26,6 +46,8 @@ const Card = ({ card, onDelete, setCards }) => {
 
   const handleChange = (e) => setText(e.target.value);
 
+  const toggleMenu = () => setIsMenuActive((prev) => !prev);
+
   return (
     <>
       {editing ? (
@@ -38,8 +60,15 @@ const Card = ({ card, onDelete, setCards }) => {
       ) : (
         <span>{card.name}</span>
       )}
-      <button onClick={onDelete}>delete</button>
-      <button onClick={enterEditMode}>edit</button>
+      <button onClick={toggleMenu} id={card.id}>
+        메뉴 토글
+      </button>
+      {isMenuActive ? (
+        <Menu>
+          <Button func={enterEditMode} />
+          <Button name="delete card" func={onDelete} />
+        </Menu>
+      ) : null}
     </>
   );
 };

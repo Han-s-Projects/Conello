@@ -1,6 +1,8 @@
 import axios from "axios";
+import Button from "components/Button/Button";
 import Card from "components/Card/Card";
 import Form from "components/Form/Form";
+import Menu from "components/Menu/Menu";
 import { useState, useEffect } from "react";
 
 const List = ({ list, setLists }) => {
@@ -8,6 +10,7 @@ const List = ({ list, setLists }) => {
   const [cardText, setCardText] = useState("");
   const [listText, setListText] = useState(list.name);
   const [editing, setEditing] = useState(false);
+  const [isMenuActive, setIsMenuActive] = useState(false);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -56,7 +59,10 @@ const List = ({ list, setLists }) => {
     setLists((prev) => prev.filter((l) => l.id !== id));
   };
 
-  const enterEditMode = () => setEditing(true);
+  const enterEditMode = () => {
+    setEditing(true);
+    setIsMenuActive(false);
+  };
 
   const handleListNameChange = (e) => setListText(e.target.value);
 
@@ -77,10 +83,13 @@ const List = ({ list, setLists }) => {
     if (e.key === "Enter") editText(id);
   };
 
+  const toggleMenu = () => setIsMenuActive((prev) => !prev);
+
   return (
     <>
       {editing ? (
         <input
+          onBlur={() => editText(list.id)}
           value={listText}
           onKeyUp={(e) => handleEnter(e, list.id)}
           onChange={handleListNameChange}
@@ -88,10 +97,13 @@ const List = ({ list, setLists }) => {
       ) : (
         <span>{list.name}</span>
       )}
-      <div>
-        <button onClick={() => deleteList(list.id)}>delete</button>
-        <button onClick={enterEditMode}>edit</button>
-      </div>
+      <button onClick={toggleMenu}>메뉴 토글</button>
+      {isMenuActive ? (
+        <Menu>
+          <Button func={enterEditMode} />
+          <Button name="delete list" func={() => deleteList(list.id)} />
+        </Menu>
+      ) : null}
       {cards.map((card) => (
         <Card
           key={card.id}
