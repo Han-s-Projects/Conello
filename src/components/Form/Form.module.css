@@ -1,0 +1,30 @@
+.form {
+  position: absolute;
+  bottom: var(--padding-regular);
+}
+
+.input {
+  margin-right: var(--margin-regular);
+  padding-left: var(--padding-regular);
+  width: 11.125rem;
+  height: 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--font-regular);
+  box-shadow: var(--box-shadow);
+}
+
+.btn {
+  width: 3.875rem;
+  height: 1.5rem;
+  font-size: var(--font-regular);
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+  color: var(--color-white);
+  background: var(--color-accent);
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--color-accent-hover);
+}

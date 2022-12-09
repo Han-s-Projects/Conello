@@ -4,6 +4,7 @@ import Card from "components/Card/Card";
 import Form from "components/Form/Form";
 import Menu from "components/Menu/Menu";
 import { useState, useEffect } from "react";
+import styles from "./List.module.css";
 
 const List = ({ list, setLists }) => {
   const [cards, setCards] = useState([]);
@@ -22,10 +23,24 @@ const List = ({ list, setLists }) => {
     fetchCards();
   }, []);
 
+  useEffect(() => {
+    const closeMenu = (e) => {
+      if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
+    };
+
+    window.addEventListener("click", closeMenu);
+
+    return () => {
+      window.removeEventListener("click", closeMenu);
+    };
+  }, [isMenuActive]);
+
   const handleCardNameChange = (e) => setCardText(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!cardText.trim()) return;
 
     const { data } = await axios.post("http://localhost:3001/cards", {
       id: crypto.randomUUID(),
@@ -39,6 +54,7 @@ const List = ({ list, setLists }) => {
       url: "https://trello.com/c/WhSROzo1/4-%EA%B5%AD%EC%96%B4",
     });
 
+    setCardText("");
     setCards([...cards, data]);
   };
 
@@ -86,7 +102,7 @@ const List = ({ list, setLists }) => {
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
   return (
-    <>
+    <li className={styles.container}>
       {editing ? (
         <input
           onBlur={() => editText(list.id)}
@@ -95,29 +111,34 @@ const List = ({ list, setLists }) => {
           onChange={handleListNameChange}
         />
       ) : (
-        <span>{list.name}</span>
+        <div className={styles.titleContainer}>
+          <h3 className={styles.title}>{list.name}</h3>
+        </div>
       )}
-      <button onClick={toggleMenu}>메뉴 토글</button>
+      <button className={styles.menuBtn} onClick={toggleMenu}></button>
       {isMenuActive ? (
         <Menu>
           <Button func={enterEditMode} />
           <Button name="delete list" func={() => deleteList(list.id)} />
         </Menu>
       ) : null}
-      {cards.map((card) => (
-        <Card
-          key={card.id}
-          card={card}
-          onDelete={() => handleDelete(card.id)}
-          setCards={setCards}
-        />
-      ))}
+      <ul className={styles.cards}>
+        {cards.map((card) => (
+          <Card
+            key={card.id}
+            card={card}
+            onDelete={() => handleDelete(card.id)}
+            setCards={setCards}
+          />
+        ))}
+      </ul>
       <Form
         placeholder="Add a card"
+        value={cardText}
         onChange={handleCardNameChange}
         onSubmit={handleSubmit}
       />
-    </>
+    </li>
   );
 };
 

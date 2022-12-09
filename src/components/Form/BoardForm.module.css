@@ -1,0 +1,36 @@
+.form {
+  margin: 0 0 3.5rem 3.75rem;
+}
+
+.input {
+  margin-right: var(--margin-medium);
+  padding-left: var(--padding-medium);
+  width: 15rem;
+  height: 2.5rem;
+  border: none;
+  font-size: var(--font-medium);
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+}
+
+.input::placeholder {
+  font-weight: bold;
+  letter-spacing: 0.01rem;
+  color: var(--color-text-sub);
+}
+
+.btn {
+  width: 4.5rem;
+  height: 2.5rem;
+  font-size: var(--font-medium);
+  font-weight: bold;
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+  color: var(--color-white);
+  background: var(--color-accent);
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--color-accent-hover);
+}

@@ -2,6 +2,7 @@ import axios from "axios";
 import Button from "components/Button/Button";
 import Menu from "components/Menu/Menu";
 import { useState, useEffect } from "react";
+import styles from "./Card.module.css";
 
 const Card = ({ card, onDelete, setCards }) => {
   const [editing, setEditing] = useState(false);
@@ -10,9 +11,7 @@ const Card = ({ card, onDelete, setCards }) => {
 
   useEffect(() => {
     const closeMenu = (e) => {
-      console.log(e.target.innerText);
-      if (e.target.innerText === "메뉴 토글" && isMenuActive)
-        setIsMenuActive(false);
+      if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
     };
 
     window.addEventListener("click", closeMenu);
@@ -49,7 +48,7 @@ const Card = ({ card, onDelete, setCards }) => {
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
   return (
-    <>
+    <li className={styles.container}>
       {editing ? (
         <input
           onBlur={() => editText(card.id)}
@@ -58,18 +57,21 @@ const Card = ({ card, onDelete, setCards }) => {
           onChange={handleChange}
         />
       ) : (
-        <span>{card.name}</span>
+        <span className={styles.name}>{card.name}</span>
       )}
-      <button onClick={toggleMenu} id={card.id}>
-        메뉴 토글
-      </button>
+      <button
+        className={styles.menuBtn}
+        onClick={toggleMenu}
+        id={card.id}
+      ></button>
       {isMenuActive ? (
         <Menu>
           <Button func={enterEditMode} />
           <Button name="delete card" func={onDelete} />
+          <Button name="edit description" />
         </Menu>
       ) : null}
-    </>
+    </li>
   );
 };
 
