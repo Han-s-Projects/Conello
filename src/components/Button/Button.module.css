@@ -1,0 +1,32 @@
+.menu {
+  display: flex;
+  text-align: left;
+  outline: none;
+}
+
+.menu:nth-child(1) {
+  padding-bottom: var(--padding-regular);
+  border-bottom: 1px solid var(--color-sub);
+}
+
+.menu:nth-child(1)::before {
+  content: url("assets/pencil.svg");
+}
+
+.menu:nth-child(2)::before {
+  content: url("assets/delete.svg");
+}
+
+.menu:nth-child(3) {
+  padding-top: var(--padding-regular);
+  border-top: 1px solid var(--color-sub);
+}
+
+.menu:nth-child(3)::before {
+  content: url("assets/description.svg");
+}
+
+.menu:hover,
+.menu:focus {
+  background-color: var(--color-bg-hover);
+}

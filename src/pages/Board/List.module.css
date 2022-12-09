@@ -1,0 +1,38 @@
+.container {
+  position: relative;
+  padding: var(--padding-regular) var(--padding-regular) 3.125rem
+    var(--padding-regular);
+  margin: 0 1.5rem 1rem 0;
+  min-width: 16.5rem;
+  max-width: 16.5rem;
+
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--color-list);
+}
+
+.titleContainer {
+  margin-bottom: var(--margin-regular);
+  padding-right: 1.5rem;
+  border-bottom: 1px solid var(--color-sub);
+}
+
+.title {
+  padding-bottom: var(--padding-regular);
+  font-size: var(--font-medium);
+  word-break: break-all;
+}
+
+.menuBtn {
+  position: absolute;
+  top: 0.25rem;
+  right: var(--margin-regular);
+  width: 1.5rem;
+  height: 1.5rem;
+  background: url("assets/menu.svg");
+}
+
+.cards {
+  max-height: calc(100vh - 26rem);
+  overflow-y: auto;
+}
