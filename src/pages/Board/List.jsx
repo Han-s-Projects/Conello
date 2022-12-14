@@ -14,10 +14,13 @@ const List = ({ list, setLists }) => {
   const [isMenuActive, setIsMenuActive] = useState(false);
 
   useEffect(() => {
+    // Get Cards in a List
     const fetchCards = async () => {
-      const { data } = await axios.get("http://localhost:3001/cards");
+      const { data } = await axios.get(
+        `https://api.trello.com/1/lists/${list.id}/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      );
 
-      setCards(data.filter(({ idList }) => idList === list.id));
+      setCards(data);
     };
 
     fetchCards();
@@ -37,42 +40,33 @@ const List = ({ list, setLists }) => {
 
   const handleCardNameChange = (e) => setCardText(e.target.value);
 
-  const handleSubmit = async (e) => {
+  const createCard = async (e) => {
     e.preventDefault();
 
     if (!cardText.trim()) return;
 
-    const { data } = await axios.post("http://localhost:3001/cards", {
-      id: crypto.randomUUID(),
-      name: cardText,
-      desc: "",
-      closed: false,
-      pos: 65535,
-      idBoard: "638afc978397000123346ccf",
-      idList: list.id,
-      dateLastActivity: new Date().toISOString(),
-      url: "https://trello.com/c/WhSROzo1/4-%EA%B5%AD%EC%96%B4",
-    });
+    const { data } = await axios.post(
+      `https://api.trello.com/1/cards?idList=${list.id}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${cardText}`
+    );
 
     setCardText("");
     setCards([...cards, data]);
   };
 
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3001/cards/${id}`);
+  const deleteCard = (id) => {
+    axios.delete(
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+    );
 
     setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
   const deleteList = (id) => {
-    axios.delete(`http://localhost:3001/lists/${id}`);
+    axios.put(
+      `https://api.trello.com/1/lists/${id}/closed?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&value=true`
+    );
 
-    cards.forEach((card) => {
-      if (card.idList === id)
-        axios.delete(`http://localhost:3001/cards/${card.id}`);
-    });
-
-    setLists((prev) => prev.filter((l) => l.id !== id));
+    setLists((prev) => prev.filter((list) => list.id !== id));
   };
 
   const enterEditMode = () => {
@@ -82,21 +76,29 @@ const List = ({ list, setLists }) => {
 
   const handleListNameChange = (e) => setListText(e.target.value);
 
-  const editText = (id) => {
+  const renameList = (id) => {
     if (!listText.trim()) return;
 
     setListText(listText.trim());
+
+    // TODO: CORS 에러 발생 해결 해야 함. http-proxy-middleware 라이브러리 소용 없었다. 라이브러리 삭제하고 src/settingProxy.js도 삭제해도 됨
+    // axios.put(
+    //   `https://api.trello.com/1/lists/${id}/${listText}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+    // );
+
+    axios.put(
+      `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${listText}`
+    );
 
     setLists((prev) =>
       prev.map((l) => (l.id === list.id ? { ...l, name: listText } : l))
     );
 
     setEditing(false);
-    axios.patch(`http://localhost:3001/lists/${id}`, { name: listText });
   };
 
   const handleEnter = (e, id) => {
-    if (e.key === "Enter") editText(id);
+    if (e.key === "Enter") renameList(id);
   };
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
@@ -105,7 +107,7 @@ const List = ({ list, setLists }) => {
     <li className={styles.container}>
       {editing ? (
         <input
-          onBlur={() => editText(list.id)}
+          onBlur={() => renameList(list.id)}
           value={listText}
           onKeyUp={(e) => handleEnter(e, list.id)}
           onChange={handleListNameChange}
@@ -127,7 +129,7 @@ const List = ({ list, setLists }) => {
           <Card
             key={card.id}
             card={card}
-            onDelete={() => handleDelete(card.id)}
+            onDelete={() => deleteCard(card.id)}
             setCards={setCards}
           />
         ))}
@@ -136,7 +138,7 @@ const List = ({ list, setLists }) => {
         placeholder="Add a card"
         value={cardText}
         onChange={handleCardNameChange}
-        onSubmit={handleSubmit}
+        onSubmit={createCard}
       />
     </li>
   );
