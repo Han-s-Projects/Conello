@@ -10,8 +10,11 @@ const Board = () => {
   const [text, setText] = useState("");
 
   useEffect(() => {
+    // Get List on a Board
     const fetchLists = async () => {
-      const { data } = await axios.get("http://localhost:3001/lists");
+      const { data } = await axios.get(
+        `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      );
       setLists(data);
     };
 
@@ -20,18 +23,14 @@ const Board = () => {
 
   const handleChange = (e) => setText(e.target.value);
 
-  const handleSubmit = async (e) => {
+  const createList = async (e) => {
     e.preventDefault();
 
     if (!text.trim()) return;
 
-    const { data } = await axios.post("http://localhost:3001/lists", {
-      id: crypto.randomUUID(),
-      name: text,
-      closed: false,
-      pos: 65535,
-      idBoard: "638afc978397000123346ccf",
-    });
+    const { data } = await axios.post(
+      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+    );
 
     setText("");
     setLists([...lists, data]);
@@ -45,7 +44,7 @@ const Board = () => {
         placeholder={"Add a list"}
         value={text}
         onChange={handleChange}
-        onSubmit={handleSubmit}
+        onSubmit={createList}
       />
       <ListContainer lists={lists} setLists={setLists} />
     </>

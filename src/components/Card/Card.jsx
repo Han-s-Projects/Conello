@@ -26,21 +26,23 @@ const Card = ({ card, onDelete, setCards }) => {
     setIsMenuActive(false);
   };
 
-  const editText = (id) => {
+  const renameCard = (id) => {
     if (!text.trim()) return;
 
     setText(text.trim());
 
+    setEditing(false);
+    axios.put(
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${text}`
+    );
+
     setCards((prev) =>
       prev.map((c) => (c.id === card.id ? { ...c, name: text } : c))
     );
-
-    setEditing(false);
-    axios.patch(`http://localhost:3001/cards/${id}`, { name: text });
   };
 
   const handleEnter = (e, id) => {
-    if (e.key === "Enter") editText(id);
+    if (e.key === "Enter") renameCard(id);
   };
 
   const handleChange = (e) => setText(e.target.value);
@@ -51,7 +53,7 @@ const Card = ({ card, onDelete, setCards }) => {
     <li className={styles.container}>
       {editing ? (
         <input
-          onBlur={() => editText(card.id)}
+          onBlur={() => renameCard(card.id)}
           value={text}
           onKeyUp={(e) => handleEnter(e, card.id)}
           onChange={handleChange}
