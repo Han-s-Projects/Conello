@@ -5,26 +5,13 @@ import Form from "components/Form/Form";
 import Menu from "components/Menu/Menu";
 import { useState, useEffect } from "react";
 import styles from "./List.module.css";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
-const List = ({ list, setLists }) => {
-  const [cards, setCards] = useState([]);
+const List = ({ list, setLists, cards, setCards }) => {
   const [cardText, setCardText] = useState("");
   const [listText, setListText] = useState(list.name);
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
-
-  useEffect(() => {
-    // Get Cards in a List
-    const fetchCards = async () => {
-      const { data } = await axios.get(
-        `https://api.trello.com/1/lists/${list.id}/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-      );
-
-      setCards(data);
-    };
-
-    fetchCards();
-  }, []);
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -81,11 +68,6 @@ const List = ({ list, setLists }) => {
 
     setListText(listText.trim());
 
-    // TODO: CORS 에러 발생 해결 해야 함. http-proxy-middleware 라이브러리 소용 없었다. 라이브러리 삭제하고 src/settingProxy.js도 삭제해도 됨
-    // axios.put(
-    //   `https://api.trello.com/1/lists/${id}/${listText}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-    // );
-
     axios.put(
       `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${listText}`
     );
@@ -124,16 +106,34 @@ const List = ({ list, setLists }) => {
           <Button name="delete list" func={() => deleteList(list.id)} />
         </Menu>
       ) : null}
-      <ul className={styles.cards}>
-        {cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-            onDelete={() => deleteCard(card.id)}
-            setCards={setCards}
-          />
-        ))}
-      </ul>
+      <Droppable droppableId={list.id} type="CARD">
+        {(provided) => (
+          <ul
+            className={styles.cards}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {cards.map((card, i) => (
+              <Draggable key={card.id} draggableId={card.id} index={i}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Card
+                      card={card}
+                      onDelete={() => deleteCard(card.id)}
+                      setCards={setCards}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
       <Form
         placeholder="Add a card"
         value={cardText}
