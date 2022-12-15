@@ -58,7 +58,7 @@ const Board = () => {
       return;
 
     if (type === "LIST") {
-      let _lists = JSON.parse(JSON.stringify(lists));
+      let _lists = structuredClone(lists);
       const [list] = _lists.splice(source.index, 1);
 
       _lists.splice(destination.index, 0, list);
@@ -79,8 +79,9 @@ const Board = () => {
     }
 
     if (type === "CARD") {
+      const deepCopiedCards = structuredClone(cards);
       if (source.droppableId === destination.droppableId) {
-        let _cards = JSON.parse(JSON.stringify(cards)).filter(
+        let _cards = deepCopiedCards.filter(
           (card) => card.idList === source.droppableId
         );
         const [card] = _cards.splice(source.index, 1);
@@ -101,10 +102,10 @@ const Board = () => {
 
         setCards(_cards);
       } else {
-        let _cardsFrom = JSON.parse(JSON.stringify(cards)).filter(
+        let _cardsFrom = deepCopiedCards.filter(
           (card) => card.idList === source.droppableId
         );
-        let _cardsTo = JSON.parse(JSON.stringify(cards)).filter(
+        let _cardsTo = deepCopiedCards.filter(
           (card) => card.idList === destination.droppableId
         );
         const [from] = _cardsFrom.splice(source.index, 1);
