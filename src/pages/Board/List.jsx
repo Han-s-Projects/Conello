@@ -5,23 +5,15 @@ import Form from "components/Form/Form";
 import Menu from "components/Menu/Menu";
 import { useState, useEffect } from "react";
 import styles from "./List.module.css";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
-const List = ({ list, setLists }) => {
-  const [cards, setCards] = useState([]);
+const List = ({ list, setLists, cards, setCards }) => {
   const [cardText, setCardText] = useState("");
   const [listText, setListText] = useState(list.name);
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      const { data } = await axios.get("http://localhost:3001/cards");
-
-      setCards(data.filter(({ idList }) => idList === list.id));
-    };
-
-    fetchCards();
-  }, []);
+  // console.log(list.name, cards);
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -37,42 +29,33 @@ const List = ({ list, setLists }) => {
 
   const handleCardNameChange = (e) => setCardText(e.target.value);
 
-  const handleSubmit = async (e) => {
+  const createCard = async (e) => {
     e.preventDefault();
 
     if (!cardText.trim()) return;
 
-    const { data } = await axios.post("http://localhost:3001/cards", {
-      id: crypto.randomUUID(),
-      name: cardText,
-      desc: "",
-      closed: false,
-      pos: 65535,
-      idBoard: "638afc978397000123346ccf",
-      idList: list.id,
-      dateLastActivity: new Date().toISOString(),
-      url: "https://trello.com/c/WhSROzo1/4-%EA%B5%AD%EC%96%B4",
-    });
+    const { data } = await axios.post(
+      `https://api.trello.com/1/cards?idList=${list.id}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${cardText}`
+    );
 
     setCardText("");
     setCards([...cards, data]);
   };
 
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3001/cards/${id}`);
+  const deleteCard = (id) => {
+    axios.delete(
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+    );
 
     setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
   const deleteList = (id) => {
-    axios.delete(`http://localhost:3001/lists/${id}`);
+    axios.put(
+      `https://api.trello.com/1/lists/${id}/closed?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&value=true`
+    );
 
-    cards.forEach((card) => {
-      if (card.idList === id)
-        axios.delete(`http://localhost:3001/cards/${card.id}`);
-    });
-
-    setLists((prev) => prev.filter((l) => l.id !== id));
+    setLists((prev) => prev.filter((list) => list.id !== id));
   };
 
   const enterEditMode = () => {
@@ -82,21 +65,24 @@ const List = ({ list, setLists }) => {
 
   const handleListNameChange = (e) => setListText(e.target.value);
 
-  const editText = (id) => {
+  const renameList = (id) => {
     if (!listText.trim()) return;
 
     setListText(listText.trim());
+
+    axios.put(
+      `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${listText}`
+    );
 
     setLists((prev) =>
       prev.map((l) => (l.id === list.id ? { ...l, name: listText } : l))
     );
 
     setEditing(false);
-    axios.patch(`http://localhost:3001/lists/${id}`, { name: listText });
   };
 
   const handleEnter = (e, id) => {
-    if (e.key === "Enter") editText(id);
+    if (e.key === "Enter") renameList(id);
   };
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
@@ -105,7 +91,7 @@ const List = ({ list, setLists }) => {
     <li className={styles.container}>
       {editing ? (
         <input
-          onBlur={() => editText(list.id)}
+          onBlur={() => renameList(list.id)}
           value={listText}
           onKeyUp={(e) => handleEnter(e, list.id)}
           onChange={handleListNameChange}
@@ -122,21 +108,39 @@ const List = ({ list, setLists }) => {
           <Button name="delete list" func={() => deleteList(list.id)} />
         </Menu>
       ) : null}
-      <ul className={styles.cards}>
-        {cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-            onDelete={() => handleDelete(card.id)}
-            setCards={setCards}
-          />
-        ))}
-      </ul>
+      <Droppable droppableId={list.id} type="CARD">
+        {(provided) => (
+          <ul
+            className={styles.cards}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {cards.map((card, i) => (
+              <Draggable key={card.id} draggableId={card.id} index={i}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Card
+                      card={card}
+                      onDelete={() => deleteCard(card.id)}
+                      setCards={setCards}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
       <Form
         placeholder="Add a card"
         value={cardText}
         onChange={handleCardNameChange}
-        onSubmit={handleSubmit}
+        onSubmit={createCard}
       />
     </li>
   );
