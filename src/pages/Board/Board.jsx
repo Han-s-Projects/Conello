@@ -16,25 +16,27 @@ const Board = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: lists } = await axios.get(
-        `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-      );
+      await Promise.allSettled([
+        axios.get(
+          `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+        ),
 
-      setLists(lists);
-
-      const { data: cards } = await axios.get(
-        `https://api.trello.com/1/boards/luQhevFB/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-      );
-
-      if (cards) {
+        axios.get(
+          `https://api.trello.com/1/boards/luQhevFB/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+        ),
+      ]).then(([lists, cards]) => {
         setIsLoading(false);
-
-        setCards(cards);
-      }
+        setLists(lists.value.data);
+        setCards(cards.value.data);
+      });
     };
 
-    fetchData();
-  }, [cards.length]);
+    try {
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const handleChange = (e) => setText(e.target.value);
 
