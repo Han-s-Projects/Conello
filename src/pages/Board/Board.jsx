@@ -46,11 +46,11 @@ const Board = () => {
     if (!text.trim()) return;
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=bottom`
     );
 
     setText("");
-    setLists([data, ...lists]);
+    setLists([...lists, data]);
   };
 
   const onDragEnd = useCallback(
