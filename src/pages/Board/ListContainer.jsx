@@ -3,9 +3,7 @@ import styles from "./ListContainer.module.css";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 const ListContainer = ({ lists, setLists, cards, setCards }) => {
-  const cardsInList = (idList) => {
-    return cards.filter((card) => card.idList === idList);
-  };
+  console.log("ListContainer render");
 
   return (
     <Droppable droppableId="lists" direction="horizontal" type="LIST">
@@ -26,7 +24,7 @@ const ListContainer = ({ lists, setLists, cards, setCards }) => {
                   <List
                     list={list}
                     setLists={setLists}
-                    cards={cardsInList(list.id)}
+                    cards={cards}
                     setCards={setCards}
                   />
                 </div>

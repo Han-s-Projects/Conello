@@ -13,6 +13,8 @@ const List = ({ list, setLists, cards, setCards }) => {
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
 
+  console.log("List render");
+
   useEffect(() => {
     const closeMenu = (e) => {
       if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
@@ -37,7 +39,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     );
 
     setCardText("");
-    setCards([...cards, data]);
+    setCards((prev) => [...prev, data]);
   };
 
   const deleteCard = (id) => {
@@ -113,23 +115,25 @@ const List = ({ list, setLists, cards, setCards }) => {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {cards.map((card, i) => (
-              <Draggable key={card.id} draggableId={card.id} index={i}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Card
-                      card={card}
-                      onDelete={() => deleteCard(card.id)}
-                      setCards={setCards}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
+            {cards
+              .filter((card) => card.idList === list.id)
+              .map((card, i) => (
+                <Draggable key={card.id} draggableId={card.id} index={i}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card
+                        card={card}
+                        onDelete={() => deleteCard(card.id)}
+                        setCards={setCards}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
             {provided.placeholder}
           </ul>
         )}
