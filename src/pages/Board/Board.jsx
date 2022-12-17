@@ -132,6 +132,8 @@ const Board = () => {
             ...prev.filter((card) => card.idList !== source.droppableId),
             ..._cards,
           ]);
+
+          console.log(cards.map((card) => card.pos));
         } else {
           let _cardsFrom = deepCopiedCards.filter(
             (card) => card.idList === source.droppableId
@@ -161,10 +163,16 @@ const Board = () => {
                 );
           });
 
-          setCards([..._cardsFrom, ..._cardsTo]);
+          setCards((prev) => [
+            ...prev.filter(
+              (card) =>
+                card.idList !== source.droppableId &&
+                card.idList !== destination.droppableId
+            ),
+            ..._cardsFrom,
+            ..._cardsTo,
+          ]);
         }
-
-        // console.log(cards.map((card) => card.pos));
       }
     },
     [lists, cards]
