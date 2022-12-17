@@ -70,11 +70,41 @@ const Board = () => {
 
         _lists = _lists.map((_list, pos) => ({ ..._list, pos }));
 
-        _lists.forEach(({ id, pos }) => {
-          axios.put(
-            `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
-          );
-        });
+        Promise.allSettled(
+          _lists.map(({ id, pos }) =>
+            axios.put(
+              `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+            )
+          )
+        )
+          .then((res) => {
+            const _lists = res.map(({ value }) => value.data);
+
+            if (_lists.some(({ pos }) => pos > _lists.at(-1).pos)) {
+              _lists.forEach(({ id, pos }, i) => {
+                if (pos > _lists[i + 1].pos) {
+                  axios.put(
+                    `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${i}`
+                  );
+                }
+              });
+            }
+
+            if (
+              new Set(_lists.map((_list) => _list.pos)).size !== _lists.length
+            ) {
+              const { id, pos } = _lists.find(
+                ({ pos }, i) => pos === _lists[i + 1].pos
+              );
+
+              axios.put(
+                `https://api.trello.com/1/lists/${id}?key=${
+                  process.env.REACT_APP_KEY
+                }&token=${process.env.REACT_APP_TOKEN}&pos=${pos - 1}`
+              );
+            }
+          })
+          .catch((error) => console.error(error));
 
         setLists(_lists);
       }
@@ -90,7 +120,7 @@ const Board = () => {
 
           _cards.splice(destination.index, 0, card);
 
-          _cards = _cards.map((_card, pos) => ({ ..._card, pos: pos + 1 }));
+          _cards = _cards.map((_card, pos) => ({ ..._card, pos }));
 
           _cards.forEach(({ id, pos }) => {
             axios.put(
@@ -133,6 +163,8 @@ const Board = () => {
 
           setCards([..._cardsFrom, ..._cardsTo]);
         }
+
+        // console.log(cards.map((card) => card.pos));
       }
     },
     [lists, cards]
