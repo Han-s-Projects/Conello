@@ -2,7 +2,7 @@ import axios from "axios";
 import Header from "components/Header/Header";
 import Form from "components/Form/Form";
 import ListContainer from "./ListContainer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styles from "./Board.module.css";
 import { DragDropContext } from "@hello-pangea/dnd";
 
@@ -12,27 +12,31 @@ const Board = () => {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log("@@@@@@Board render@@@@@@");
+
   useEffect(() => {
     const fetchData = async () => {
-      const { data: lists } = await axios.get(
-        `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-      );
+      await Promise.allSettled([
+        axios.get(
+          `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+        ),
 
-      setLists(lists);
-
-      const { data: cards } = await axios.get(
-        `https://api.trello.com/1/boards/luQhevFB/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
-      );
-
-      if (cards) {
+        axios.get(
+          `https://api.trello.com/1/boards/luQhevFB/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+        ),
+      ]).then(([lists, cards]) => {
         setIsLoading(false);
-
-        setCards(cards);
-      }
+        setLists(lists.value.data);
+        setCards(cards.value.data);
+      });
     };
 
-    fetchData();
-  }, [cards.length]);
+    try {
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const handleChange = (e) => setText(e.target.value);
 
@@ -42,99 +46,137 @@ const Board = () => {
     if (!text.trim()) return;
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=bottom`
     );
 
     setText("");
-    setLists([data, ...lists]);
+    setLists([...lists, data]);
   };
 
-  const onDragEnd = ({ source, destination, type }) => {
-    if (
-      !destination ||
-      (source.index === destination.index &&
-        source.droppableId === destination.droppableId)
-    )
-      return;
+  const onDragEnd = useCallback(
+    ({ source, destination, type }) => {
+      if (
+        !destination ||
+        (source.index === destination.index &&
+          source.droppableId === destination.droppableId)
+      )
+        return;
 
-    if (type === "LIST") {
-      let _lists = JSON.parse(JSON.stringify(lists));
-      const [list] = _lists.splice(source.index, 1);
+      if (type === "LIST") {
+        let _lists = structuredClone(lists);
+        const [list] = _lists.splice(source.index, 1);
 
-      _lists.splice(destination.index, 0, list);
+        _lists.splice(destination.index, 0, list);
 
-      _lists = _lists.map((_list, pos) => ({ ..._list, pos }));
+        _lists = _lists.map((_list, pos) => ({ ..._list, pos }));
 
-      console.log(..._lists.map(({ name, pos }) => [name, pos]));
-
-      _lists.forEach(({ id, pos }) => {
-        axios
-          .put(
-            `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
-          )
-          .then((res) => console.log(res.data.name, res.data.pos));
-      });
-
-      setLists(_lists);
-    }
-
-    if (type === "CARD") {
-      if (source.droppableId === destination.droppableId) {
-        let _cards = JSON.parse(JSON.stringify(cards)).filter(
-          (card) => card.idList === source.droppableId
-        );
-        const [card] = _cards.splice(source.index, 1);
-
-        _cards.splice(destination.index, 0, card);
-
-        _cards = _cards.map((_card, pos) => ({ ..._card, pos: pos + 1 }));
-
-        console.log(..._cards.map(({ name, pos }) => [name, pos]));
-
-        _cards.forEach(({ id, pos }) => {
-          axios
-            .put(
-              `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+        Promise.allSettled(
+          _lists.map(({ id, pos }) =>
+            axios.put(
+              `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
             )
-            .then((res) => console.log(res.data.name, res.data.pos));
-        });
+          )
+        )
+          .then((res) => {
+            const _lists = res.map(({ value }) => value.data);
 
-        setCards(_cards);
-      } else {
-        let _cardsFrom = JSON.parse(JSON.stringify(cards)).filter(
-          (card) => card.idList === source.droppableId
-        );
-        let _cardsTo = JSON.parse(JSON.stringify(cards)).filter(
-          (card) => card.idList === destination.droppableId
-        );
-        const [from] = _cardsFrom.splice(source.index, 1);
+            if (_lists.some(({ pos }) => pos > _lists.at(-1).pos)) {
+              _lists.forEach(({ id, pos }, i) => {
+                if (pos > _lists[i + 1].pos) {
+                  axios.put(
+                    `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${i}`
+                  );
+                }
+              });
+            }
 
-        console.log(from);
-
-        _cardsFrom = _cardsFrom.map((_card, pos) => ({ ..._card, pos }));
-
-        _cardsTo.splice(destination.index, 0, from);
-
-        _cardsTo = _cardsTo.map((_card, pos) =>
-          pos === destination.index
-            ? { ..._card, pos, idList: destination.droppableId }
-            : { ..._card, pos }
-        );
-
-        _cardsTo.forEach(({ id, pos }) => {
-          pos === destination.index
-            ? axios.put(
-                `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}&idList=${destination.droppableId}`
-              )
-            : axios.put(
-                `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+            if (
+              new Set(_lists.map((_list) => _list.pos)).size !== _lists.length
+            ) {
+              const { id, pos } = _lists.find(
+                ({ pos }, i) => pos === _lists[i + 1].pos
               );
-        });
 
-        setCards([..._cardsFrom, ..._cardsTo]);
+              axios.put(
+                `https://api.trello.com/1/lists/${id}?key=${
+                  process.env.REACT_APP_KEY
+                }&token=${process.env.REACT_APP_TOKEN}&pos=${pos - 1}`
+              );
+            }
+          })
+          .catch((error) => console.error(error));
+
+        setLists(_lists);
       }
-    }
-  };
+
+      if (type === "CARD") {
+        const deepCopiedCards = structuredClone(cards);
+
+        if (source.droppableId === destination.droppableId) {
+          let _cards = deepCopiedCards.filter(
+            (card) => card.idList === source.droppableId
+          );
+          const [card] = _cards.splice(source.index, 1);
+
+          _cards.splice(destination.index, 0, card);
+
+          _cards = _cards.map((_card, pos) => ({ ..._card, pos }));
+
+          _cards.forEach(({ id, pos }) => {
+            axios.put(
+              `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+            );
+          });
+
+          setCards((prev) => [
+            ...prev.filter((card) => card.idList !== source.droppableId),
+            ..._cards,
+          ]);
+
+          console.log(cards.map((card) => card.pos));
+        } else {
+          let _cardsFrom = deepCopiedCards.filter(
+            (card) => card.idList === source.droppableId
+          );
+          let _cardsTo = deepCopiedCards.filter(
+            (card) => card.idList === destination.droppableId
+          );
+          const [from] = _cardsFrom.splice(source.index, 1);
+
+          _cardsFrom = _cardsFrom.map((_card, pos) => ({ ..._card, pos }));
+
+          _cardsTo.splice(destination.index, 0, from);
+
+          _cardsTo = _cardsTo.map((_card, pos) =>
+            pos === destination.index
+              ? { ..._card, pos, idList: destination.droppableId }
+              : { ..._card, pos }
+          );
+
+          _cardsTo.forEach(({ id, pos }) => {
+            pos === destination.index
+              ? axios.put(
+                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}&idList=${destination.droppableId}`
+                )
+              : axios.put(
+                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+                );
+          });
+
+          setCards((prev) => [
+            ...prev.filter(
+              (card) =>
+                card.idList !== source.droppableId &&
+                card.idList !== destination.droppableId
+            ),
+            ..._cardsFrom,
+            ..._cardsTo,
+          ]);
+        }
+      }
+    },
+    [lists, cards]
+  );
 
   return (
     <>
