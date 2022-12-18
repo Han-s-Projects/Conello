@@ -5,6 +5,7 @@
     var(--padding-regular);
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
+  background-color: var(--color-white);
 }
 
 .container:hover,

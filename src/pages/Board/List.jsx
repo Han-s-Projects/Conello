@@ -87,6 +87,27 @@ const List = ({ list, setLists, cards, setCards }) => {
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
+  const getCardStyle = (style, snapshot) => {
+    if (!snapshot.isDropAnimating) {
+      return style;
+    }
+    const { moveTo, curve, duration } = snapshot.dropAnimation;
+    const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
+    const rotate = "rotate(5deg)";
+    const scale = "scale(1.2)";
+
+    return {
+      ...style,
+      transform: `${translate} ${rotate} ${scale}`,
+      transition: `all ${curve} ${duration + 0.05}s`,
+    };
+  };
+
+  const getListStyle = (snapshot) => ({
+    borderRadius: snapshot.isDraggingOver ? "4px" : null,
+    background: snapshot.isDraggingOver ? "#e3eeff" : null,
+  });
+
   return (
     <li className={styles.container}>
       {editing ? (
@@ -109,21 +130,29 @@ const List = ({ list, setLists, cards, setCards }) => {
         </Menu>
       ) : null}
       <Droppable droppableId={list.id} type="CARD">
-        {(provided) => (
+        {(provided, snapshot) => (
           <ul
             className={styles.cards}
             ref={provided.innerRef}
             {...provided.droppableProps}
+            style={getListStyle(snapshot)}
           >
             {cards
               .filter((card) => card.idList === list.id)
               .map((card, i) => (
                 <Draggable key={card.id} draggableId={card.id} index={i}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      isDragging={
+                        snapshot.isDragging && !snapshot.isDropAnimating
+                      }
+                      style={getCardStyle(
+                        provided.draggableProps.style,
+                        snapshot
+                      )}
                     >
                       <Card
                         card={card}
