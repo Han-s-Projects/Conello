@@ -9,4 +9,5 @@
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
+  z-index: 9999;
 }
