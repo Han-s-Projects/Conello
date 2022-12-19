@@ -51,3 +51,7 @@ button {
   cursor: pointer;
   background: transparent;
 }
+
+a {
+  text-decoration: none;
+}
