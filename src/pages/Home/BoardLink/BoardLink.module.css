@@ -1,0 +1,17 @@
+.container {
+  position: relative;
+  width: 11.5rem;
+  height: 6rem;
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--color-white);
+}
+
+.menuBtn {
+  position: absolute;
+  top: 0.25rem;
+  right: var(--margin-regular);
+  width: 1.5rem;
+  height: 1.5rem;
+  background: url("assets/menu.svg");
+}
