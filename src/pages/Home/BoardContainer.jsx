@@ -1,11 +1,9 @@
-import React from "react";
+import axios from "axios";
 import Form from "components/Form/Form";
 import Header from "components/Header/Header";
-import Board from "pages/Board/Board";
 import BoardLink from "./BoardLink/BoardLink";
 import styles from "./BoardContainer.module.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 const BoardContainer = () => {
   const [boards, setBoards] = useState([]);

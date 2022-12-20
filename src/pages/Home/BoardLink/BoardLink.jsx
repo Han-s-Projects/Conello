@@ -3,6 +3,7 @@ import { useState } from "react";
 import Menu from "components/Menu/Menu";
 import Button from "components/Button/Button";
 import styles from "./BoardLink.module.css";
+import { Link } from "react-router-dom";
 
 const BoardItem = ({ id, name, setBoards }) => {
   const [boardTitle, setBoardTitle] = useState(name);
@@ -32,7 +33,7 @@ const BoardItem = ({ id, name, setBoards }) => {
     setBoardTitle(boardTitle.trim());
 
     axios.put(
-      `https://api.trello.com/1/boards/luQhevFB?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${boardTitle}`
+      `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${boardTitle}`
     );
 
     setBoards((prev) =>
@@ -59,7 +60,7 @@ const BoardItem = ({ id, name, setBoards }) => {
           onChange={handleBoardNameChange}
         />
       ) : (
-        <a href="/">{name}</a>
+        <Link to={`/board/${id}`}>{name}</Link>
       )}
       {isMenuActive ? (
         <Menu>
