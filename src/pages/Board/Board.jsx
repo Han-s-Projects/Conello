@@ -5,12 +5,14 @@ import ListContainer from "./ListContainer";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./Board.module.css";
 import { DragDropContext } from "@hello-pangea/dnd";
+import { useParams } from "react-router-dom";
 
 const Board = () => {
   const [lists, setLists] = useState([]);
   const [cards, setCards] = useState([]);
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
 
   console.log("@@@@@@Board render@@@@@@");
 
@@ -18,11 +20,11 @@ const Board = () => {
     const fetchData = async () => {
       await Promise.allSettled([
         axios.get(
-          `https://api.trello.com/1/boards/luQhevFB/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+          `https://api.trello.com/1/boards/${id}/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
         ),
 
         axios.get(
-          `https://api.trello.com/1/boards/luQhevFB/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+          `https://api.trello.com/1/boards/${id}/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
         ),
       ]).then(([lists, cards]) => {
         setIsLoading(false);
@@ -46,7 +48,7 @@ const Board = () => {
     if (!text.trim()) return;
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/boards/luQhevFB/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=bottom`
+      `https://api.trello.com/1/boards/${id}/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=bottom`
     );
 
     setText("");
