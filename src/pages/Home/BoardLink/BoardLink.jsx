@@ -54,13 +54,16 @@ const BoardItem = ({ id, name, setBoards }) => {
       <button className={styles.menuBtn} onClick={toggleMenu}></button>
       {editing ? (
         <input
+          className={styles.input}
           onBlur={() => renameBoard(id)}
           value={boardTitle}
           onKeyUp={(e) => handleEnter(e, id)}
           onChange={handleBoardNameChange}
         />
       ) : (
-        <Link to={`/board/${id}`}>{name}</Link>
+        <Link className={styles.linkContainer} to={`/board/${id}`}>
+          <span className={styles.listTitle}>{name}</span>
+        </Link>
       )}
       {isMenuActive ? (
         <Menu>
