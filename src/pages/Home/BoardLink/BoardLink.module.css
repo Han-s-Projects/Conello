@@ -1,10 +1,9 @@
 .container {
   position: relative;
-  width: 11.5rem;
-  height: 6rem;
+  width: 13.5rem;
+  height: 7rem;
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
-  background-color: var(--color-white);
 }
 
 .menuBtn {
@@ -14,4 +13,24 @@
   width: 1.5rem;
   height: 1.5rem;
   background: url("assets/menu.svg");
+}
+
+.input {
+  margin: var(--margin-regular) 0 0 var(--margin-regular);
+}
+
+.linkContainer {
+  display: block;
+  padding: var(--margin-regular) 0 0 var(--margin-regular);
+  width: 13.5rem;
+  height: 7rem;
+  font-size: var(--font-medium);
+  border-radius: var(--radius);
+  color: var(--color-text-main);
+}
+
+.listTitle {
+  display: inline-block;
+  max-width: 11rem;
+  word-break: break-all;
 }

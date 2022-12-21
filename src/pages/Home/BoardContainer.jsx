@@ -15,7 +15,7 @@ const BoardContainer = () => {
         `https://api.trello.com/1/organizations/637cd0d919ae57012698e904/boards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&filter=open`
       );
 
-      setBoards(data.map(({ id, name }) => ({ id, name })));
+      setBoards(data.map(({ id, name }, i) => ({ id, name, i })));
     };
 
     fetchBoards();
@@ -32,7 +32,7 @@ const BoardContainer = () => {
       `https://api.trello.com/1/boards/?name=${boardTitle}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&idOrganization=637cd0d919ae57012698e904`
     );
 
-    setBoards((prev) => [data, ...prev]);
+    setBoards((prev, i) => [...prev, { ...data, i }]);
     setBoardTitle("");
   };
 
