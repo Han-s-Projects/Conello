@@ -1,13 +1,17 @@
 import axios from "axios";
 import Button from "components/Button/Button";
 import Menu from "components/Menu/Menu";
+import Description from "pages/Board/Description/Description";
+import DescriptionPortal from "pages/Board/Description/DescriptionPortal";
 import { useState, useEffect } from "react";
 import styles from "./Card.module.css";
 
-const Card = ({ card, onDelete, setCards }) => {
+const Card = ({ card, onDelete, setCards, listTitle }) => {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(card.name);
   const [isMenuActive, setIsMenuActive] = useState(false);
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [description, setDescription] = useState(card.desc);
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -49,6 +53,10 @@ const Card = ({ card, onDelete, setCards }) => {
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
+  const openDescription = () => setIsModalActive(true);
+
+  const closeDescription = () => setIsModalActive(false);
+
   return (
     <li className={styles.container}>
       {editing ? (
@@ -66,13 +74,30 @@ const Card = ({ card, onDelete, setCards }) => {
         onClick={toggleMenu}
         id={card.id}
       ></button>
-      {isMenuActive ? (
+      {description && (
+        <span>
+          <br></br>*
+        </span>
+      )}
+      {isMenuActive && (
         <Menu>
           <Button func={enterEditMode} />
           <Button name="delete card" func={onDelete} />
-          <Button name="edit description" />
+          <Button name="edit description" func={openDescription} />
         </Menu>
-      ) : null}
+      )}
+      {isModalActive && (
+        <DescriptionPortal>
+          <Description
+            close={closeDescription}
+            listTitle={listTitle}
+            cardTitle={text}
+            card={card}
+            description={description}
+            setDescription={setDescription}
+          />
+        </DescriptionPortal>
+      )}
     </li>
   );
 };
