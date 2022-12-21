@@ -27,6 +27,12 @@
   font-size: var(--font-medium);
   border-radius: var(--radius);
   color: var(--color-text-main);
+  background-color: var(--color-bg);
+}
+
+.linkContainer:hover,
+.linkContainer:focus {
+  background-color: var(--color-bg-hover);
 }
 
 .listTitle {

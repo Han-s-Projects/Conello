@@ -13,8 +13,6 @@ const List = ({ list, setLists, cards, setCards }) => {
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
 
-  console.log("List render");
-
   useEffect(() => {
     const closeMenu = (e) => {
       if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
