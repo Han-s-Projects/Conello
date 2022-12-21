@@ -38,9 +38,9 @@ html.dark {
 
 body {
   margin: 0;
+  height: 100vh;
   font-family: "Ubuntu", sans-serif;
-  background: no-repeat url("assets/background.svg");
-  background-size: cover;
+  background: no-repeat center/100% url("./assets/background.svg");
 }
 
 ul {
