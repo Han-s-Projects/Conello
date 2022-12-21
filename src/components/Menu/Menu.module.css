@@ -1,11 +1,9 @@
 .menu {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-regular);
   position: absolute;
   top: 1.5rem;
   right: 0;
-  padding: var(--padding-regular);
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
