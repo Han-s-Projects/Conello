@@ -1,11 +1,12 @@
 .title {
   margin: 2rem 3.75rem;
   padding-left: 2.25rem;
-  background: url("assets/board.svg") no-repeat left;
+  background: url("assets/user.svg") no-repeat left;
 }
 
 .boardsContainer {
   display: flex;
+  flex-wrap: wrap;
   gap: 3.25rem;
   padding: 0 3.75rem;
 }
