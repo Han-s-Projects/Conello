@@ -158,6 +158,7 @@ const List = ({ list, setLists, cards, setCards }) => {
                         card={card}
                         onDelete={() => deleteCard(card.id)}
                         setCards={setCards}
+                        listTitle={listText}
                       />
                     </div>
                   )}

@@ -200,6 +200,7 @@ const Board = () => {
           />
         )}
       </DragDropContext>
+      <div id="modal"></div>
     </>
   );
 };
