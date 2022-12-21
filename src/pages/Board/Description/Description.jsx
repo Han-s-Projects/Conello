@@ -31,7 +31,9 @@ const Description = ({
     <div className={styles.modalBackground}>
       <article className={styles.container}>
         <h3 className={styles.cardTitle}>{cardTitle}</h3>
-        <p>in list {listTitle}</p>
+        <p className={styles.p}>
+          in list <span className={styles.listTitle}>{listTitle}</span>
+        </p>
         <h4 className={styles.descriptionTitle}>Description</h4>
         <div>
           {isTextareaOpen ? (
@@ -42,18 +44,27 @@ const Description = ({
                 onChange={handleChange}
                 value={description}
               ></textarea>
-              <button onClick={updateDescription}>save</button>
-              <button onClick={closeTextArea}>cancel</button>
+              <div className={styles.btnContainer}>
+                <button className={styles.btn} onClick={updateDescription}>
+                  save
+                </button>
+                <button
+                  className={styles.btn + " " + styles.cancel}
+                  onClick={closeTextArea}
+                >
+                  cancel
+                </button>
+              </div>
             </div>
           ) : (
-            <button onClick={openTextarea}>
+            <button className={styles.descriptionArea} onClick={openTextarea}>
               {description && !isTextareaOpen
                 ? description
                 : "Add a more detailed description..."}
             </button>
           )}
         </div>
-        <button onClick={close}>X</button>
+        <button className={styles.closeBtn} onClick={close}></button>
       </article>
     </div>
   );
