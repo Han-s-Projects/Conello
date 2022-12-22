@@ -1,22 +1,19 @@
-import "./App.css";
+import React from "react";
+import { RecoilRoot } from "recoil";
+import BoardContainer from "pages/Home/BoardContainer";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Board from "pages/Board/Board";
+
+const router = createBrowserRouter([
+  { path: "/", element: <BoardContainer />, errorElement: <p>Not Found🥲</p> },
+  { path: "/board/:id", element: <Board />, errorElement: <p>Not Found🥲</p> },
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
   );
 }
 

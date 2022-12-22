@@ -1,0 +1,10 @@
+.title {
+  margin: 2rem 3.75rem;
+  padding-left: 2.25rem;
+  color: var(--color-text-main);
+  background: url("assets/board.svg") no-repeat left;
+}
+
+:root[color-theme="dark"] .title {
+  background: url("assets/board-dark.svg") no-repeat left;
+}
