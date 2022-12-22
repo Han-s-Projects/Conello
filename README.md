@@ -24,10 +24,6 @@ Conello 페이지 : https://melodic-cobbler-b3337c.netlify.app/
   
 </p>
 
-# ✍🏻 프로젝트 진행과정 기록
-
-[Conello - Wiki](https://github.com/Han-s-Projects/Conello/wiki)에서 확인할 수 있습니다.
-
 ### Utils
 
 <p>
@@ -35,6 +31,10 @@ Conello 페이지 : https://melodic-cobbler-b3337c.netlify.app/
   <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/>
   <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>
 </p>
+
+# ✍🏻 프로젝트 진행과정 기록
+
+[Conello - Wiki](https://github.com/Han-s-Projects/Conello/wiki)에서 확인할 수 있습니다.
 
 # SUMMARY
 
