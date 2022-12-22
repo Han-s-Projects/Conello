@@ -18,12 +18,16 @@ const Description = ({
 
   const handleChange = (e) => setDescription(e.target.value);
 
-  const updateDescription = async () => {
-    const { data } = await axios.put(
-      `https://api.trello.com/1/cards/${card.id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&desc=${description}`
+  const updateDescription = () => {
+    axios.put(
+      `https://api.trello.com/1/cards/${card.id}?key=${
+        process.env.REACT_APP_KEY
+      }&token=${process.env.REACT_APP_TOKEN}&desc=${description.replace(
+        /(?:\r\n|\r|\n)/g,
+        "<br/>"
+      )}`
     );
 
-    setDescription(data.desc);
     setIsTextareaOpen(false);
   };
 
@@ -43,6 +47,8 @@ const Description = ({
                 placeholder="Add a more detailed description..."
                 onChange={handleChange}
                 value={description}
+                cols="40"
+                wrap="hard"
               ></textarea>
               <div className={styles.btnContainer}>
                 <button className={styles.btn} onClick={updateDescription}>

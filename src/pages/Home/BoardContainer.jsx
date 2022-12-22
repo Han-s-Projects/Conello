@@ -4,12 +4,19 @@ import Header from "components/Header/Header";
 import BoardLink from "./BoardLink/BoardLink";
 import styles from "./BoardContainer.module.css";
 import { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import themeMode from "recoil/atom";
+import ToggleTheme from "components/ThemeToggleButton/ThemeToggleButton";
+import updateTheme from "utils/updateTheme";
 
 const BoardContainer = () => {
   const [boards, setBoards] = useState([]);
   const [boardTitle, setBoardTitle] = useState("");
+  const theme = useRecoilValue(themeMode);
+  console.log(theme);
 
   useEffect(() => {
+    updateTheme(theme);
     const fetchBoards = async () => {
       const { data } = await axios.get(
         `https://api.trello.com/1/organizations/637cd0d919ae57012698e904/boards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&filter=open`
@@ -51,6 +58,7 @@ const BoardContainer = () => {
           <BoardLink key={id} id={id} name={name} setBoards={setBoards} />
         ))}
       </ul>
+      <ToggleTheme />
     </>
   );
 };

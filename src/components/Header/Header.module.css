@@ -17,4 +17,5 @@
   right: 3.75rem;
   font-size: 1rem;
   font-weight: bold;
+  color: var(--color-text-main);
 }

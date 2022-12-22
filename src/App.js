@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from "recoil";
 import BoardContainer from "pages/Home/BoardContainer";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Board from "pages/Board/Board";
@@ -10,9 +11,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <React.StrictMode>
+    <RecoilRoot>
       <RouterProvider router={router} />
-    </React.StrictMode>
+    </RecoilRoot>
   );
 }
 

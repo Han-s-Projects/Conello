@@ -110,6 +110,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     <li className={styles.container}>
       {editing ? (
         <input
+          className={styles.input}
           onBlur={() => renameList(list.id)}
           value={listText}
           onKeyUp={(e) => handleEnter(e, list.id)}
