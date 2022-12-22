@@ -11,8 +11,19 @@
   background-color: var(--color-list);
 }
 
+:root[color-theme="dark"] .container {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
 .container:hover {
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+}
+
+:root[color-theme="dark"] .input {
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
 }
 
 .titleContainer {
@@ -25,6 +36,7 @@
   padding-bottom: var(--padding-regular);
   font-size: var(--font-medium);
   word-break: break-all;
+  color: var(--color-text-main);
 }
 
 .menuBtn {
@@ -34,6 +46,10 @@
   width: 1.5rem;
   height: 1.5rem;
   background: url("assets/menu.svg");
+}
+
+:root[color-theme="dark"] .menuBtn {
+  background: url("assets/menu-dark.svg");
 }
 
 .cards {

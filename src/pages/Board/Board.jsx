@@ -6,6 +6,10 @@ import { useState, useEffect, useCallback } from "react";
 import styles from "./Board.module.css";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { useParams } from "react-router-dom";
+import ToggleTheme from "components/ThemeToggleButton/ThemeToggleButton";
+import { useRecoilValue } from "recoil";
+import themeMode from "recoil/atom";
+import updateTheme from "utils/updateTheme";
 
 const Board = () => {
   const [lists, setLists] = useState([]);
@@ -13,10 +17,12 @@ const Board = () => {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+  const theme = useRecoilValue(themeMode);
 
   console.log("@@@@@@Board render@@@@@@");
 
   useEffect(() => {
+    updateTheme(theme);
     const fetchData = async () => {
       await Promise.allSettled([
         axios.get(
@@ -200,6 +206,7 @@ const Board = () => {
           />
         )}
       </DragDropContext>
+      <ToggleTheme />
       <div id="modal"></div>
     </>
   );

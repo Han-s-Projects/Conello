@@ -4,6 +4,11 @@
   height: 7rem;
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
+  background-color: var(--color-bg);
+}
+
+:root[color-theme="dark"] .container {
+  border: 1px solid var(--color-border);
 }
 
 .menuBtn {
@@ -15,8 +20,18 @@
   background: url("assets/menu.svg");
 }
 
+:root[color-theme="dark"] .menuBtn {
+  background: url("assets/menu-dark.svg");
+}
+
 .input {
   margin: var(--margin-regular) 0 0 var(--margin-regular);
+}
+
+:root[color-theme="dark"] .input {
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
 }
 
 .linkContainer {
@@ -28,6 +43,10 @@
   border-radius: var(--radius);
   color: var(--color-text-main);
   background-color: var(--color-bg);
+}
+
+:root[color-theme="dark"] .linkContainer {
+  border: 1px solid var(--color-border);
 }
 
 .linkContainer:hover,

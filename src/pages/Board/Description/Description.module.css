@@ -11,56 +11,22 @@
 }
 
 .container {
-  width: 45rem;
-  border-radius: var(--radius);
-  box-shadow: var(--box-shadow);
-  background-color: var(--color-white);
-}
-
-.cardTitle::before {
-  content: "";
-  background: url("assets/title.svg");
-}
-
-.descriptionTitle::before {
-  content: "";
-  background: url("assets/description.svg");
-}
-
-.descriptionInput {
-  width: 34.25rem;
-  min-height: 5rem;
-  resize: none;
-}
-.modalBackground {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.container {
   position: relative;
   padding: 1.5rem 0 1.5rem 2.5rem;
   width: 45rem;
   min-height: 18rem;
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
-  background-color: var(--color-white);
+  background-color: var(--color-bg);
+}
+
+:root[color-theme="dark"] .container {
+  border: 1px solid var(--color-border);
 }
 
 .cardTitle {
   padding: 0.1rem 0 0.5rem 2.5rem;
-}
-
-.p {
-  padding-left: 2.7rem;
-  color: var(--color-text-sub);
+  color: var(--color-text-main);
 }
 
 .cardTitle::before {
@@ -73,6 +39,15 @@
   background: url("assets/title.svg");
 }
 
+:root[color-theme="dark"] .cardTitle::before {
+  background: url("assets/title-dark.svg");
+}
+
+.p {
+  padding-left: 2.7rem;
+  color: var(--color-text-sub);
+}
+
 .listTitle {
   text-decoration: underline;
 }
@@ -80,6 +55,7 @@
 .descriptionTitle {
   position: relative;
   padding: 1.75rem 0 1.375rem 2.7rem;
+  color: var(--color-text-main);
 }
 
 .descriptionTitle::before {
@@ -93,6 +69,11 @@
   background-size: contain;
 }
 
+:root[color-theme="dark"] .descriptionTitle::before {
+  background: no-repeat url("assets/description-dark.svg");
+  background-size: contain;
+}
+
 .descriptionInput {
   margin-left: 2.85rem;
   width: 34.25rem;
@@ -101,8 +82,15 @@
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
   background-color: var(--color-list);
-
   resize: none;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+:root[color-theme="dark"] .descriptionInput {
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
 }
 
 .btnContainer {
@@ -132,6 +120,10 @@
   background-color: var(--color-bg);
 }
 
+:root[color-theme="dark"] .cancel {
+  border: 1px solid var(--color-border);
+}
+
 .cancel:hover,
 .cancel:focus {
   background-color: var(--color-bg-hover);
@@ -140,12 +132,19 @@
 .descriptionArea {
   display: inline-flex;
   margin-left: 2.85rem;
-  padding: 1rem 0 0 1rem;
+  padding: 1rem;
   width: 34.25rem;
-  height: 5rem;
+  min-height: 5rem;
+  white-space: pre-wrap;
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
+  color: var(--color-text-main);
   background-color: var(--color-bg);
+  word-break: break-all;
+}
+
+:root[color-theme="dark"] .descriptionArea {
+  border: 1px solid var(--color-border);
 }
 
 .descriptionArea:hover,
@@ -160,4 +159,8 @@
   width: 1.5rem;
   height: 1.5rem;
   background: url("assets/close.svg");
+}
+
+:root[color-theme="dark"] .closeBtn {
+  background: url("assets/close-dark.svg");
 }

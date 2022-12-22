@@ -5,6 +5,8 @@ import Description from "pages/Board/Description/Description";
 import DescriptionPortal from "pages/Board/Description/DescriptionPortal";
 import { useState, useEffect } from "react";
 import styles from "./Card.module.css";
+import { useRecoilValue } from "recoil";
+import themeMode from "recoil/atom";
 
 const Card = ({ card, onDelete, setCards, listTitle }) => {
   const [editing, setEditing] = useState(false);
@@ -12,6 +14,7 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
   const [description, setDescription] = useState(card.desc);
+  const theme = useRecoilValue(themeMode);
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -61,6 +64,7 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
     <li className={styles.container}>
       {editing ? (
         <input
+          className={styles.input}
           onBlur={() => renameCard(card.id)}
           value={text}
           onKeyUp={(e) => handleEnter(e, card.id)}
@@ -76,7 +80,15 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
       ></button>
       {description && (
         <span>
-          <br></br>*
+          <br></br>
+          <img
+            src={
+              theme === "dark"
+                ? require("assets/description-dark.svg").default
+                : require("assets/description.svg").default
+            }
+            alt="description"
+          ></img>
         </span>
       )}
       {isMenuActive && (
