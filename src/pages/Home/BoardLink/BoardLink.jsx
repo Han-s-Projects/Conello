@@ -61,7 +61,11 @@ const BoardItem = ({ id, name, setBoards }) => {
           onChange={handleBoardNameChange}
         />
       ) : (
-        <Link className={styles.linkContainer} to={`/board/${id}`}>
+        <Link
+          className={styles.linkContainer}
+          to={`/board/${id}`}
+          state={{ boardTitle }}
+        >
           <span className={styles.listTitle}>{name}</span>
         </Link>
       )}
