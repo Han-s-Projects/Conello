@@ -188,7 +188,7 @@ const Board = () => {
   );
 
   return (
-    <>
+    <div className={styles.container}>
       <Header />
       <h2 className={styles.title}>{boardTitle}</h2>
       <Form
@@ -209,7 +209,7 @@ const Board = () => {
       </DragDropContext>
       <ToggleTheme />
       <div id="modal"></div>
-    </>
+    </div>
   );
 };
 

@@ -33,6 +33,7 @@ const ListContainer = ({ lists, setLists, cards, setCards }) => {
             <Draggable key={list.id} draggableId={list.id} index={i}>
               {(provided, snapshot) => (
                 <div
+                  className={styles.list}
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}

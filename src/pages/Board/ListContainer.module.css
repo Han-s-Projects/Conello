@@ -1,6 +1,14 @@
 .container {
   display: flex;
-  align-items: flex-start;
   gap: 1.5rem;
   padding: 0 3.75rem;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.list {
+  height: 10%;
+  border-radius: var(--radius);
 }
