@@ -38,13 +38,14 @@
 
 body {
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
   font-family: "Ubuntu", sans-serif;
-  background: no-repeat center/100% url("./assets/background.svg");
+  background: url("./assets/background.svg") no-repeat center center;
 }
 
 :root[color-theme="dark"] body {
-  background: no-repeat center/100% url("./assets/background-dark.svg");
+  min-height: 100vh;
+  background: url("./assets/background-dark.svg") no-repeat center center;
 }
 
 ul {
