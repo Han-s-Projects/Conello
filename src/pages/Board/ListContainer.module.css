@@ -1,4 +1,8 @@
 .container {
+  height: 100%;
+}
+
+.ul {
   display: flex;
   gap: 1.5rem;
   padding: 0 3.75rem;

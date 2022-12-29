@@ -51,8 +51,12 @@ const ListContainer = ({ lists, setLists, cards, setCards }) => {
   return (
     <Droppable droppableId="lists" direction="horizontal" type="LIST">
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps}>
-          <ul className={styles.container} ref={scrollRef}>
+        <div
+          className={styles.container}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <ul className={styles.ul} ref={scrollRef}>
             {lists.map((list, i) => (
               <Draggable key={list.id} draggableId={list.id} index={i}>
                 {(provided, snapshot) => (
