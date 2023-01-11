@@ -5,7 +5,7 @@ import ListContainer from "./ListContainer";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./Board.module.css";
 import { DragDropContext } from "@hello-pangea/dnd";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import ToggleTheme from "components/ThemeToggleButton/ThemeToggleButton";
 import { useRecoilValue } from "recoil";
 import themeMode from "recoil/atom";
@@ -18,6 +18,7 @@ const Board = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const theme = useRecoilValue(themeMode);
+  const { boardTitle } = useLocation().state;
 
   console.log("@@@@@@Board render@@@@@@");
 
@@ -187,9 +188,9 @@ const Board = () => {
   );
 
   return (
-    <>
+    <div className={styles.container}>
       <Header />
-      <h2 className={styles.title}>My first board</h2>
+      <h2 className={styles.title}>{boardTitle}</h2>
       <Form
         placeholder={"Add a list"}
         value={text}
@@ -208,7 +209,7 @@ const Board = () => {
       </DragDropContext>
       <ToggleTheme />
       <div id="modal"></div>
-    </>
+    </div>
   );
 };
 

@@ -36,15 +36,19 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  height: 100vh;
   font-family: "Ubuntu", sans-serif;
-  background: no-repeat center/100% url("./assets/background.svg");
+  background: url("./assets/background.svg") no-repeat center/cover;
 }
 
 :root[color-theme="dark"] body {
-  background: no-repeat center/100% url("./assets/background-dark.svg");
+  background: url("./assets/background-dark.svg") no-repeat center/cover;
 }
 
 ul {
