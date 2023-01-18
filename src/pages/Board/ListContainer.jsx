@@ -11,7 +11,8 @@ const useHorizontalScroll = () => {
 
     if (el) {
       const onWheel = (e) => {
-        if (e.deltaY === 0) return;
+        if (e.deltaY === 0 || e.target.getElementsByTagName("li").length === 0)
+          return;
         e.preventDefault();
 
         el.scrollTo({
@@ -46,7 +47,6 @@ const getListStyle = (style, snapshot) => {
 
 const ListContainer = ({ lists, setLists, cards, setCards }) => {
   const scrollRef = useHorizontalScroll();
-  console.log("ListContainer render");
 
   return (
     <Droppable droppableId="lists" direction="horizontal" type="LIST">

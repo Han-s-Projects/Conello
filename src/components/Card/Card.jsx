@@ -15,6 +15,7 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [description, setDescription] = useState(card.desc);
   const theme = useRecoilValue(themeMode);
+  const token = localStorage.getItem("trello_token");
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -40,7 +41,7 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
 
     setEditing(false);
     axios.put(
-      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${text}`
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${text}`
     );
 
     setCards((prev) =>

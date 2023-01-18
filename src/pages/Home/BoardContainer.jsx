@@ -8,24 +8,27 @@ import { useRecoilValue } from "recoil";
 import themeMode from "recoil/atom";
 import ToggleTheme from "components/ThemeToggleButton/ThemeToggleButton";
 import updateTheme from "utils/updateTheme";
+import { useLoaderData } from "react-router-dom";
 
 const BoardContainer = () => {
   const [boards, setBoards] = useState([]);
   const [boardTitle, setBoardTitle] = useState("");
   const theme = useRecoilValue(themeMode);
-  console.log(theme);
+  const token = localStorage.getItem("trello_token");
+  const idOrganizations = useLoaderData();
 
   useEffect(() => {
     updateTheme(theme);
-    const fetchBoards = async () => {
+
+    const fetchData = async () => {
       const { data } = await axios.get(
-        `https://api.trello.com/1/organizations/637cd0d919ae57012698e904/boards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&filter=open`
+        `https://api.trello.com/1/organizations/${idOrganizations}/boards?key=${process.env.REACT_APP_KEY}&token=${token}&filter=open`
       );
 
       setBoards(data.map(({ id, name }, i) => ({ id, name, i })));
     };
 
-    fetchBoards();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -36,7 +39,7 @@ const BoardContainer = () => {
     e.preventDefault();
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/boards/?name=${boardTitle}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&idOrganization=637cd0d919ae57012698e904`
+      `https://api.trello.com/1/boards/?name=${boardTitle}&key=${process.env.REACT_APP_KEY}&token=${token}&idOrganization=${idOrganizations}`
     );
 
     setBoards((prev, i) => [...prev, { ...data, i }]);

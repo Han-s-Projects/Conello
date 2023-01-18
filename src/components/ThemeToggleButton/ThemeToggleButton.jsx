@@ -15,8 +15,6 @@ const ThemeToggleButton = () => {
       localStorage.conelloTheme = "dark";
       setTheme("dark");
     }
-
-    console.log(localStorage.conelloTheme);
   };
 
   return (
