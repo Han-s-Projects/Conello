@@ -12,6 +12,7 @@ const List = ({ list, setLists, cards, setCards }) => {
   const [listText, setListText] = useState(list.name);
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
+  const token = localStorage.getItem("trello_token");
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -33,7 +34,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     if (!cardText.trim()) return;
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/cards?idList=${list.id}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${cardText}`
+      `https://api.trello.com/1/cards?idList=${list.id}&key=${process.env.REACT_APP_KEY}&token=${token}&name=${cardText}`
     );
 
     setCardText("");
@@ -42,7 +43,7 @@ const List = ({ list, setLists, cards, setCards }) => {
 
   const deleteCard = (id) => {
     axios.delete(
-      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}`
     );
 
     setCards((prev) => prev.filter((card) => card.id !== id));
@@ -50,7 +51,7 @@ const List = ({ list, setLists, cards, setCards }) => {
 
   const deleteList = (id) => {
     axios.put(
-      `https://api.trello.com/1/lists/${id}/closed?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&value=true`
+      `https://api.trello.com/1/lists/${id}/closed?key=${process.env.REACT_APP_KEY}&token=${token}&value=true`
     );
 
     setLists((prev) => prev.filter((list) => list.id !== id));
@@ -69,7 +70,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     setListText(listText.trim());
 
     axios.put(
-      `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${listText}`
+      `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${listText}`
     );
 
     setLists((prev) =>

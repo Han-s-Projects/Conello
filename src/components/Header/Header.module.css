@@ -1,6 +1,6 @@
 .container {
   position: relative;
-  height: 6.5rem;
+  min-height: 6.5rem;
   border-bottom: 3px solid var(--color-sub);
 }
 
