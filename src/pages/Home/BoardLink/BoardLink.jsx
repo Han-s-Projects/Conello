@@ -9,6 +9,7 @@ const BoardItem = ({ id, name, setBoards }) => {
   const [boardTitle, setBoardTitle] = useState(name);
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [editing, setEditing] = useState(false);
+  const token = localStorage.getItem("trello_token");
 
   const enterEditMode = () => {
     setEditing(true);
@@ -17,7 +18,7 @@ const BoardItem = ({ id, name, setBoards }) => {
 
   const deleteBoard = () => {
     axios.delete(
-      `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+      `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}`
     );
 
     setBoards((prev) => prev.filter((board) => board.id !== id));
@@ -33,7 +34,7 @@ const BoardItem = ({ id, name, setBoards }) => {
     setBoardTitle(boardTitle.trim());
 
     axios.put(
-      `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&name=${boardTitle}`
+      `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${boardTitle}`
     );
 
     setBoards((prev) =>
