@@ -140,8 +140,6 @@ const Board = () => {
             ...prev.filter((card) => card.idList !== source.droppableId),
             ..._cards,
           ]);
-
-          console.log(cards.map((card) => card.pos));
         } else {
           let _cardsFrom = deepCopiedCards.filter(
             (card) => card.idList === source.droppableId
