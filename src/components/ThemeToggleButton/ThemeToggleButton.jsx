@@ -5,6 +5,10 @@ import themeMode from "recoil/atom";
 const ThemeToggleButton = () => {
   const [theme, setTheme] = useRecoilState(themeMode);
 
+  if (localStorage.conelloTheme === "dark") {
+    document.documentElement.setAttribute("color-theme", "dark");
+  }
+
   const changeTheme = () => {
     if (theme === "dark") {
       document.documentElement.removeAttribute("color-theme");
