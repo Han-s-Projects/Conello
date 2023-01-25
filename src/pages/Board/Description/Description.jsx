@@ -18,14 +18,13 @@ const Description = ({
 
   const handleChange = (e) => setDescription(e.target.value);
 
+  const token = localStorage.getItem("trello_token");
+
   const updateDescription = () => {
     axios.put(
       `https://api.trello.com/1/cards/${card.id}?key=${
         process.env.REACT_APP_KEY
-      }&token=${process.env.REACT_APP_TOKEN}&desc=${description.replace(
-        /(?:\r\n|\r|\n)/g,
-        "<br/>"
-      )}`
+      }&token=${token}&desc=${description.replace(/(?:\r\n|\r|\n)/g, "<br/>")}`
     );
 
     setIsTextareaOpen(false);

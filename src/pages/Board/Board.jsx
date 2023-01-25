@@ -19,19 +19,18 @@ const Board = () => {
   const { id } = useParams();
   const theme = useRecoilValue(themeMode);
   const { boardTitle } = useLocation().state;
-
-  console.log("@@@@@@Board render@@@@@@");
+  const token = localStorage.getItem("trello_token");
 
   useEffect(() => {
     updateTheme(theme);
     const fetchData = async () => {
       await Promise.allSettled([
         axios.get(
-          `https://api.trello.com/1/boards/${id}/lists?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+          `https://api.trello.com/1/boards/${id}/lists?key=${process.env.REACT_APP_KEY}&token=${token}`
         ),
 
         axios.get(
-          `https://api.trello.com/1/boards/${id}/cards?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}`
+          `https://api.trello.com/1/boards/${id}/cards?key=${process.env.REACT_APP_KEY}&token=${token}`
         ),
       ]).then(([lists, cards]) => {
         setIsLoading(false);
@@ -55,7 +54,7 @@ const Board = () => {
     if (!text.trim()) return;
 
     const { data } = await axios.post(
-      `https://api.trello.com/1/boards/${id}/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=bottom`
+      `https://api.trello.com/1/boards/${id}/lists?name=${text}&key=${process.env.REACT_APP_KEY}&token=${token}&pos=bottom`
     );
 
     setText("");
@@ -82,7 +81,7 @@ const Board = () => {
         Promise.allSettled(
           _lists.map(({ id, pos }) =>
             axios.put(
-              `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+              `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&pos=${pos}`
             )
           )
         )
@@ -93,7 +92,7 @@ const Board = () => {
               _lists.forEach(({ id, pos }, i) => {
                 if (pos > _lists[i + 1].pos) {
                   axios.put(
-                    `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${i}`
+                    `https://api.trello.com/1/lists/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&pos=${i}`
                   );
                 }
               });
@@ -109,7 +108,7 @@ const Board = () => {
               axios.put(
                 `https://api.trello.com/1/lists/${id}?key=${
                   process.env.REACT_APP_KEY
-                }&token=${process.env.REACT_APP_TOKEN}&pos=${pos - 1}`
+                }&token=${token}&pos=${pos - 1}`
               );
             }
           })
@@ -133,7 +132,7 @@ const Board = () => {
 
           _cards.forEach(({ id, pos }) => {
             axios.put(
-              `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+              `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&pos=${pos}`
             );
           });
 
@@ -165,10 +164,10 @@ const Board = () => {
           _cardsTo.forEach(({ id, pos }) => {
             pos === destination.index
               ? axios.put(
-                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}&idList=${destination.droppableId}`
+                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&pos=${pos}&idList=${destination.droppableId}`
                 )
               : axios.put(
-                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${process.env.REACT_APP_TOKEN}&pos=${pos}`
+                  `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&pos=${pos}`
                 );
           });
 
@@ -188,7 +187,7 @@ const Board = () => {
   );
 
   return (
-    <>
+    <div className={styles.container}>
       <Header />
       <h2 className={styles.title}>{boardTitle}</h2>
       <Form
@@ -209,7 +208,7 @@ const Board = () => {
       </DragDropContext>
       <ToggleTheme />
       <div id="modal"></div>
-    </>
+    </div>
   );
 };
 

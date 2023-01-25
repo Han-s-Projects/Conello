@@ -4,9 +4,6 @@
   "private": true,
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,9 +17,7 @@
     "build": "CI= react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server --watch ./public/data/db.json",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "server": "json-server --watch ./public/data/db.json"
   },
   "eslintConfig": {
     "extends": [
@@ -53,18 +48,6 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "^6.5.14",
-    "@storybook/addon-actions": "^6.5.14",
-    "@storybook/addon-essentials": "^6.5.14",
-    "@storybook/addon-interactions": "^6.5.14",
-    "@storybook/addon-links": "^6.5.14",
-    "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/builder-webpack5": "^6.5.14",
-    "@storybook/manager-webpack5": "^6.5.14",
-    "@storybook/node-logger": "^6.5.14",
-    "@storybook/preset-create-react-app": "^4.1.2",
-    "@storybook/react": "^6.5.14",
-    "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.5.1",
     "babel-plugin-named-exports-order": "^0.0.2",
     "prop-types": "^15.8.1",
