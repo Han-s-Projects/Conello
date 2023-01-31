@@ -6,19 +6,46 @@ const Description = ({
   close,
   listTitle,
   cardTitle,
+  setCardTitle,
+  setCards,
   card,
   description,
   setDescription,
 }) => {
   const [isTextareaOpen, setIsTextareaOpen] = useState(false);
+  const [titleEditing, setTitleEditing] = useState(false);
+  const token = localStorage.getItem("trello_token");
+
+  const enterTitleEdit = () => {
+    setTitleEditing(true);
+  };
+
+  const renameCard = (id) => {
+    if (!cardTitle.trim()) return;
+
+    setCardTitle(cardTitle.trim());
+
+    setTitleEditing(false);
+    axios.put(
+      `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${cardTitle}`
+    );
+
+    setCards((prev) =>
+      prev.map((c) => (c.id === card.id ? { ...c, name: cardTitle } : c))
+    );
+  };
+
+  const handleEnter = (e, id) => {
+    if (e.key === "Enter") renameCard(id);
+  };
+
+  const handleCardTitleChange = (e) => setCardTitle(e.target.value);
 
   const openTextarea = () => setIsTextareaOpen(true);
 
   const closeTextArea = () => setIsTextareaOpen(false);
 
-  const handleChange = (e) => setDescription(e.target.value);
-
-  const token = localStorage.getItem("trello_token");
+  const handleDescChange = (e) => setDescription(e.target.value);
 
   const updateDescription = () => {
     axios.put(
@@ -33,7 +60,19 @@ const Description = ({
   return (
     <div className={styles.modalBackground}>
       <article className={styles.container}>
-        <h3 className={styles.cardTitle}>{cardTitle}</h3>
+        {titleEditing ? (
+          <input
+            className={styles.input}
+            onBlur={() => renameCard(card.id)}
+            value={cardTitle}
+            onKeyUp={(e) => handleEnter(e, card.id)}
+            onChange={handleCardTitleChange}
+          />
+        ) : (
+          <h3 className={styles.cardTitle} onClick={enterTitleEdit}>
+            {cardTitle}
+          </h3>
+        )}
         <p className={styles.p}>
           in list <span className={styles.listTitle}>{listTitle}</span>
         </p>
@@ -44,7 +83,7 @@ const Description = ({
               <textarea
                 className={styles.descriptionInput}
                 placeholder="Add a more detailed description..."
-                onChange={handleChange}
+                onChange={handleDescChange}
                 value={description}
                 cols="40"
                 wrap="hard"
