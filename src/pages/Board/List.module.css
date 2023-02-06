@@ -20,22 +20,27 @@
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
 }
 
+.titleContainer {
+  margin-bottom: var(--margin-regular);
+  padding-right: 1.8rem;
+  border-bottom: 1px solid var(--color-sub);
+}
+
+.input {
+  margin-bottom: 0.5rem;
+}
+
 :root[color-theme="dark"] .input {
   color: var(--color-text-main);
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
 }
 
-.titleContainer {
-  margin-bottom: var(--margin-regular);
-  padding-right: 1.5rem;
-  border-bottom: 1px solid var(--color-sub);
-}
-
 .title {
   padding-bottom: var(--padding-regular);
   font-size: var(--font-medium);
-  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--color-text-main);
 }
 
