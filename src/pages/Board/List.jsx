@@ -109,19 +109,19 @@ const List = ({ list, setLists, cards, setCards }) => {
 
   return (
     <li className={styles.container}>
-      {editing ? (
-        <input
-          className={styles.input}
-          onBlur={() => renameList(list.id)}
-          value={listText}
-          onKeyUp={(e) => handleEnter(e, list.id)}
-          onChange={handleListNameChange}
-        />
-      ) : (
-        <div className={styles.titleContainer}>
+      <div className={styles.titleContainer}>
+        {editing ? (
+          <input
+            className={styles.input}
+            onBlur={() => renameList(list.id)}
+            value={listText}
+            onKeyUp={(e) => handleEnter(e, list.id)}
+            onChange={handleListNameChange}
+          />
+        ) : (
           <h3 className={styles.title}>{list.name}</h3>
-        </div>
-      )}
+        )}
+      </div>
       <button className={styles.menuBtn} onClick={toggleMenu}></button>
       {isMenuActive ? (
         <Menu>
