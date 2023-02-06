@@ -20,12 +20,19 @@
   background-color: var(--color-bg);
 }
 
+:root[color-theme="dark"] .input {
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+}
+
 :root[color-theme="dark"] .container {
   border: 1px solid var(--color-border);
 }
 
 .cardTitle {
   padding: 0.1rem 0 0.5rem 2.5rem;
+  cursor: pointer;
   color: var(--color-text-main);
 }
 
@@ -135,6 +142,7 @@
   padding: 1rem;
   width: 34.25rem;
   min-height: 5rem;
+  text-align: left;
   white-space: pre-wrap;
   border-radius: var(--radius);
   box-shadow: var(--box-shadow);
