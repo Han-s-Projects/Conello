@@ -2,7 +2,7 @@
 
 기존 서비스 페이지 : https://trello.com/
 
-Conello 페이지 : https://melodic-cobbler-b3337c.netlify.app/
+Conello 페이지 : https://conello.netlify.app/
 
 # 📆 진행 기간
 
