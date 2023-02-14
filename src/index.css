@@ -47,6 +47,10 @@ body {
   background: url("./assets/background.svg") no-repeat center/cover;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 :root[color-theme="dark"] body {
   background: url("./assets/background-dark.svg") no-repeat center/cover;
 }

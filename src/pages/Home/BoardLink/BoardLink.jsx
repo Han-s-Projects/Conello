@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Menu from "components/Menu/Menu";
 import Button from "components/Button/Button";
 import styles from "./BoardLink.module.css";
@@ -10,6 +10,11 @@ const BoardItem = ({ id, name, setBoards }) => {
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [editing, setEditing] = useState(false);
   const token = localStorage.getItem("trello_token");
+  const titleInputRef = useRef(null);
+
+  useEffect(() => {
+    if (editing) titleInputRef.current.focus();
+  }, [editing]);
 
   const enterEditMode = () => {
     setEditing(true);
@@ -60,6 +65,7 @@ const BoardItem = ({ id, name, setBoards }) => {
           value={boardTitle}
           onKeyUp={(e) => handleEnter(e, id)}
           onChange={handleBoardNameChange}
+          ref={titleInputRef}
         />
       ) : (
         <Link
