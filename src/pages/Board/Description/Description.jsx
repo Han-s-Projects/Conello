@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./Description.module.css";
 
 const Description = ({
@@ -12,9 +12,11 @@ const Description = ({
   description,
   setDescription,
 }) => {
-  const [isTextareaOpen, setIsTextareaOpen] = useState(false);
+  const [textareaEditing, setTextareaEditing] = useState(false);
   const [titleEditing, setTitleEditing] = useState(false);
   const token = localStorage.getItem("trello_token");
+  const cardTitleInputRef = useRef(null);
+  const textareaRef = useRef(null);
 
   const enterTitleEdit = () => {
     setTitleEditing(true);
@@ -41,9 +43,9 @@ const Description = ({
 
   const handleCardTitleChange = (e) => setCardTitle(e.target.value);
 
-  const openTextarea = () => setIsTextareaOpen(true);
+  const openTextarea = () => setTextareaEditing(true);
 
-  const closeTextArea = () => setIsTextareaOpen(false);
+  const closeTextArea = () => setTextareaEditing(false);
 
   const handleDescChange = (e) => setDescription(e.target.value);
 
@@ -54,8 +56,13 @@ const Description = ({
       }&token=${token}&desc=${description.replace(/(?:\r\n|\r|\n)/g, "<br/>")}`
     );
 
-    setIsTextareaOpen(false);
+    setTextareaEditing(false);
   };
+
+  useEffect(() => {
+    if (titleEditing) cardTitleInputRef.current.focus();
+    if (textareaEditing) textareaRef.current.focus();
+  }, [titleEditing, textareaEditing]);
 
   return (
     <div className={styles.modalBackground}>
@@ -67,6 +74,7 @@ const Description = ({
             value={cardTitle}
             onKeyUp={(e) => handleEnter(e, card.id)}
             onChange={handleCardTitleChange}
+            ref={cardTitleInputRef}
           />
         ) : (
           <h3 className={styles.cardTitle} onClick={enterTitleEdit}>
@@ -78,7 +86,7 @@ const Description = ({
         </p>
         <h4 className={styles.descriptionTitle}>Description</h4>
         <div>
-          {isTextareaOpen ? (
+          {textareaEditing ? (
             <div>
               <textarea
                 className={styles.descriptionInput}
@@ -87,6 +95,7 @@ const Description = ({
                 value={description}
                 cols="40"
                 wrap="hard"
+                ref={textareaRef}
               ></textarea>
               <div className={styles.btnContainer}>
                 <button className={styles.btn} onClick={updateDescription}>
@@ -102,7 +111,7 @@ const Description = ({
             </div>
           ) : (
             <button className={styles.descriptionArea} onClick={openTextarea}>
-              {description && !isTextareaOpen
+              {description && !textareaEditing
                 ? description
                 : "Add a more detailed description..."}
             </button>
