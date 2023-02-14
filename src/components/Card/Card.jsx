@@ -10,6 +10,8 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
   const [description, setDescription] = useState(card.desc);
+  const openDescription = () => setIsModalActive(true);
+  const closeDescription = () => setIsModalActive(false);
   const theme = useRecoilValue(themeMode);
 
   useEffect(() => {
@@ -23,10 +25,6 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
       window.removeEventListener("click", closeMenu);
     };
   }, [isMenuActive]);
-
-  const openDescription = () => setIsModalActive(true);
-
-  const closeDescription = () => setIsModalActive(false);
 
   return (
     <li className={styles.container}>

@@ -3,7 +3,7 @@ import Button from "components/Button/Button";
 import Card from "components/Card/Card";
 import Form from "components/Form/Form";
 import Menu from "components/Menu/Menu";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./List.module.css";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -13,8 +13,11 @@ const List = ({ list, setLists, cards, setCards }) => {
   const [editing, setEditing] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
   const token = localStorage.getItem("trello_token");
+  const titleInputRef = useRef(null);
 
   useEffect(() => {
+    if (editing) titleInputRef.current.focus();
+
     const closeMenu = (e) => {
       if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
     };
@@ -117,6 +120,7 @@ const List = ({ list, setLists, cards, setCards }) => {
             value={listText}
             onKeyUp={(e) => handleEnter(e, list.id)}
             onChange={handleListNameChange}
+            ref={titleInputRef}
           />
         ) : (
           <h3 className={styles.title}>{list.name}</h3>

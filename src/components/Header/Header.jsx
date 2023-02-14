@@ -9,6 +9,8 @@ const Header = () => {
     localStorage.removeItem("trello_token");
 
     navigate("/");
+
+    window.location.reload();
   };
 
   return (
@@ -16,9 +18,11 @@ const Header = () => {
       <Link to={"/boards"}>
         <img className={styles.logo} src={logo} alt="logo" />
       </Link>
-      <button className={styles.logout} onClick={handleLogout}>
-        Log out
-      </button>
+      {localStorage.getItem("trello_token") ? (
+        <button className={styles.logout} onClick={handleLogout}>
+          Log out
+        </button>
+      ) : null}
     </header>
   );
 };
