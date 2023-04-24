@@ -50,13 +50,17 @@ Conello 페이지 : https://conello.netlify.app/
 ## 구현된 화면
 
 ![다크모드(소형)](https://user-images.githubusercontent.com/97519893/234138834-2408df8b-d78f-4388-bd04-4b9e3edb6043.gif)
+
 다크모드
 
 ![드래그드랍](https://user-images.githubusercontent.com/97519893/234138839-bce73613-83c2-44fb-aedf-781b3163b424.gif)
+
 드래그 앤 드랍
 
 ![연동](https://user-images.githubusercontent.com/97519893/234138840-f864da80-225d-48fa-acb0-4ed886605493.gif)
+
 Atlassian 계정 OAuth 연동
 
 ![카드CRUD](https://user-images.githubusercontent.com/97519893/234138843-2824ad56-6267-4e45-b5a2-3de7730f6890.gif)
+
 보드, 리스트, 카드 CRUD
