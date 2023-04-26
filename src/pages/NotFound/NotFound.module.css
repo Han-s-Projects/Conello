@@ -1,0 +1,29 @@
+.NotFoundWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.NotFoundValue {
+  padding-bottom: 2rem;
+}
+
+:root[color-theme='dark'] .NotFoundValue {
+  color: var(--color-text-main);
+}
+
+.NotFoundBtn {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--box-shadow);
+  color: var(--color-white);
+  background: var(--color-accent);
+}
+
+.NotFoundBtn:hover,
+.NotFoundBtn:focus {
+  background-color: var(--color-accent-hover);
+}
