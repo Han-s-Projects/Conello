@@ -1,18 +1,19 @@
-import React from "react";
-import { RecoilRoot } from "recoil";
-import BoardContainer from "pages/Home/BoardContainer";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Board from "pages/Board/Board";
-import Landing from "pages/Landing/Landing";
-import axios from "axios";
+import React from 'react';
+import { RecoilRoot } from 'recoil';
+import BoardContainer from 'pages/Home/BoardContainer';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Board from 'pages/Board/Board';
+import Landing from 'pages/Landing/Landing';
+import axios from 'axios';
+import NotFound from 'pages/NotFound/NotFound';
 
 const router = createBrowserRouter([
-  { path: "/", element: <Landing />, errorElement: <p>Not Found🥲</p> },
+  { path: '/', element: <Landing />, errorElement: <NotFound /> },
   {
-    path: "/boards",
+    path: '/boards',
     element: <BoardContainer />,
     loader: async () => {
-      const token = localStorage.getItem("trello_token");
+      const token = localStorage.getItem('trello_token');
 
       const {
         data: { idOrganizations },
@@ -22,9 +23,9 @@ const router = createBrowserRouter([
 
       return idOrganizations;
     },
-    errorElement: <p>Not Found🥲</p>,
+    errorElement: <NotFound />,
   },
-  { path: "/board/:id", element: <Board />, errorElement: <p>Not Found🥲</p> },
+  { path: '/board/:id', element: <Board />, errorElement: <NotFound /> },
 ]);
 
 function App() {
