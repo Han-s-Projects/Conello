@@ -1,33 +1,7 @@
-import List from "pages/Board/List";
-import styles from "./ListContainer.module.css";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
-import { useEffect, useRef } from "react";
-
-const useHorizontalScroll = () => {
-  const elRef = useRef();
-
-  useEffect(() => {
-    const el = elRef.current;
-
-    if (el) {
-      const onWheel = (e) => {
-        if (e.deltaY === 0 || e.target.getElementsByTagName("li").length === 0)
-          return;
-        e.preventDefault();
-
-        el.scrollTo({
-          left: el.scrollLeft + e.deltaY,
-        });
-      };
-
-      el.addEventListener("wheel", onWheel);
-
-      return () => el.removeEventListener("wheel", onWheel);
-    }
-  }, []);
-
-  return elRef;
-};
+import List from 'pages/Board/List';
+import styles from './ListContainer.module.css';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
+import useHorizontalScroll from 'hooks/useHorizontalScroll';
 
 const getListStyle = (style, snapshot) => {
   if (!snapshot.isDropAnimating) {
@@ -35,8 +9,8 @@ const getListStyle = (style, snapshot) => {
   }
   const { moveTo, curve, duration } = snapshot.dropAnimation;
   const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
-  const rotate = "rotate(5deg)";
-  const scale = "scale(1.1)";
+  const rotate = 'rotate(5deg)';
+  const scale = 'scale(1.1)';
 
   return {
     ...style,
@@ -50,7 +24,7 @@ const ListContainer = ({ lists, setLists, cards, setCards }) => {
 
   return (
     <Droppable droppableId="lists" direction="horizontal" type="LIST">
-      {(provided) => (
+      {provided => (
         <div
           className={styles.container}
           ref={provided.innerRef}
