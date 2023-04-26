@@ -7,7 +7,7 @@ import Header from 'components/Header/Header';
 const NotFound = () => {
   const navigate = useNavigate();
   const ReturnToHome = () => {
-    navigate('/');
+    localStorage.getItem('trello_token') ? navigate('/boards') : navigate('/');
   };
   return (
     <>
