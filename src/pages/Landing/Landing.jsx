@@ -1,22 +1,26 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./Landing.module.css";
-import axios from "axios";
-import Header from "components/Header/Header";
-import ToggleTheme from "components/ThemeToggleButton/ThemeToggleButton";
+import React, { useLayoutEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './Landing.module.css';
+import axios from 'axios';
+import Header from 'components/Header/Header';
+import ToggleTheme from 'components/ThemeToggleButton/ThemeToggleButton';
 
 const Landing = () => {
   const navigate = useNavigate();
 
+  useLayoutEffect(() => {
+    if (localStorage.getItem('trello_token')) navigate('/boards');
+  }, [navigate]);
+
   const handleAuthentification = () => {
     const authenticationSuccess = async () => {
-      const token = localStorage.getItem("trello_token");
+      const token = localStorage.getItem('trello_token');
 
       const { data } = await axios.get(
         `https://api.trello.com/1/members/me/?key=${process.env.REACT_APP_KEY}&token=${token}`
       );
 
-      navigate("/boards", {
+      navigate('/boards', {
         state: {
           idOrganizations: data.idOrganizations,
           token,
@@ -25,13 +29,13 @@ const Landing = () => {
     };
 
     window.Trello.authorize({
-      type: "popup",
-      name: "Conello",
+      type: 'popup',
+      name: 'Conello',
       scope: {
-        read: "true",
-        write: "true",
+        read: 'true',
+        write: 'true',
       },
-      expiration: "1day",
+      expiration: '1day',
       success: authenticationSuccess,
     });
   };
