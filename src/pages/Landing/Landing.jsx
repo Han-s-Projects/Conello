@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Landing.module.css';
 import axios from 'axios';
@@ -8,9 +8,9 @@ import ToggleTheme from 'components/ThemeToggleButton/ThemeToggleButton';
 const Landing = () => {
   const navigate = useNavigate();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (localStorage.getItem('trello_token')) navigate('/boards');
-  }, [navigate]);
+  });
 
   const handleAuthentification = () => {
     const authenticationSuccess = async () => {
