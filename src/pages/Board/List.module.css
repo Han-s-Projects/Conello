@@ -50,11 +50,11 @@
   right: var(--margin-regular);
   width: 1.5rem;
   height: 1.5rem;
-  background: url("assets/menu.svg");
+  background: url("@assets/menu.svg");
 }
 
 :root[color-theme="dark"] .menuBtn {
-  background: url("assets/menu-dark.svg");
+  background: url("@assets/menu-dark.svg");
 }
 
 .cards {

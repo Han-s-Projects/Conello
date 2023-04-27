@@ -43,11 +43,11 @@
   left: 2.5rem;
   width: 1.875rem;
   height: 1.875rem;
-  background: url("assets/title.svg");
+  background: url("@assets/title.svg");
 }
 
 :root[color-theme="dark"] .cardTitle::before {
-  background: url("assets/title-dark.svg");
+  background: url("@assets/title-dark.svg");
 }
 
 .p {
@@ -72,12 +72,12 @@
   left: 0.1rem;
   width: 1.6rem;
   height: 1.6rem;
-  background: no-repeat url("assets/description.svg");
+  background: no-repeat url("@assets/description.svg");
   background-size: contain;
 }
 
 :root[color-theme="dark"] .descriptionTitle::before {
-  background: no-repeat url("assets/description-dark.svg");
+  background: no-repeat url("@assets/description-dark.svg");
   background-size: contain;
 }
 
@@ -166,9 +166,9 @@
   right: 2.5rem;
   width: 1.5rem;
   height: 1.5rem;
-  background: url("assets/close.svg");
+  background: url("@assets/close.svg");
 }
 
 :root[color-theme="dark"] .closeBtn {
-  background: url("assets/close-dark.svg");
+  background: url("@assets/close-dark.svg");
 }

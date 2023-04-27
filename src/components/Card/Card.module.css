@@ -39,11 +39,11 @@
   padding: 0;
   width: 1rem;
   height: 1rem;
-  background: no-repeat url("assets/pencil.svg");
+  background: no-repeat url("@assets/pencil.svg");
 }
 
 :root[color-theme="dark"] .editBtn {
-  background: no-repeat url("assets/pencil-dark.svg");
+  background: no-repeat url("@assets/pencil-dark.svg");
 }
 
 .deleteBtn {
@@ -53,9 +53,9 @@
   padding: 0;
   width: 1rem;
   height: 1rem;
-  background: no-repeat url("assets/delete.svg");
+  background: no-repeat url("@assets/delete.svg");
 }
 
 :root[color-theme="dark"] .deleteBtn {
-  background: no-repeat url("assets/delete-dark.svg");
+  background: no-repeat url("@assets/delete-dark.svg");
 }

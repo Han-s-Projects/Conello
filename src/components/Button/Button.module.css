@@ -22,19 +22,19 @@
 }
 
 .menu:nth-child(1)::before {
-  content: url("assets/pencil.svg");
+  content: url("@assets/pencil.svg");
 }
 
 :root[color-theme="dark"] .menu:nth-child(1)::before {
-  content: url("assets/pencil-dark.svg");
+  content: url("@assets/pencil-dark.svg");
 }
 
 .menu:nth-child(2)::before {
-  content: url("assets/delete.svg");
+  content: url("@assets/delete.svg");
 }
 
 :root[color-theme="dark"] .menu:nth-child(2)::before {
-  content: url("assets/delete-dark.svg");
+  content: url("@assets/delete-dark.svg");
 }
 
 .menu:nth-child(3) {
@@ -42,11 +42,11 @@
 }
 
 .menu:nth-child(3)::before {
-  content: url("assets/description.svg");
+  content: url("@assets/description.svg");
 }
 
 :root[color-theme="dark"] .menu:nth-child(3)::before {
-  content: url("assets/description-dark.svg");
+  content: url("@assets/description-dark.svg");
 }
 
 :root[color-theme="dark"] .menu:last-child {
