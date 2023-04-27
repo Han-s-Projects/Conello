@@ -1,7 +1,11 @@
 import React from "react";
 import styles from "./Menu.module.css";
 
-const Menu = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Menu = ({ children }: Props) => {
   return <div className={styles.menu}>{children}</div>;
 };
 
