@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
+import TrelloCard from "interfaces/TrelloCard";
 import themeMode from "@recoil/atom";
 import Description from "@pages/Board/Description/Description";
 import DescriptionPortal from "@pages/Board/Description/DescriptionPortal";
 import styles from "./Card.module.css";
 
-const Card = ({ card, onDelete, setCards, listTitle }) => {
+interface Props {
+  card: TrelloCard;
+  onDelete: () => void;
+  setCards: () => [];
+  listTitle: string;
+}
+
+const Card = ({ card, onDelete, setCards, listTitle }: Props) => {
   const [text, setText] = useState(card.name);
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
   const [description, setDescription] = useState(card.desc);
-  const openDescription = () => setIsModalActive(true);
-  const closeDescription = () => setIsModalActive(false);
   const theme = useRecoilValue(themeMode);
 
   useEffect(() => {
-    const closeMenu = (e) => {
-      if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
+    const closeMenu = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.textContent && isMenuActive) setIsMenuActive(false);
     };
 
     window.addEventListener("click", closeMenu);
@@ -26,12 +33,15 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
     };
   }, [isMenuActive]);
 
+  const HandleOpenDescription = () => setIsModalActive(true);
+  const HandleCloseDescription = () => setIsModalActive(false);
+
   return (
     <li className={styles.container}>
-      <span className={styles.name}>{card.name}</span>
+      <span className={styles.name}>{text}</span>
       <button
         className={styles.editBtn}
-        onClick={openDescription}
+        onClick={HandleOpenDescription}
         id={card.id}
       ></button>
       <button
@@ -41,7 +51,7 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
       ></button>
       {description && (
         <span>
-          <br></br>
+          <br />
           <img
             src={
               theme === "dark"
@@ -49,14 +59,14 @@ const Card = ({ card, onDelete, setCards, listTitle }) => {
                 : require("@assets/description.svg").default
             }
             alt="description"
-          ></img>
+          />
         </span>
       )}
 
       {isModalActive && (
         <DescriptionPortal>
           <Description
-            close={closeDescription}
+            close={HandleCloseDescription}
             listTitle={listTitle}
             cardTitle={text}
             setCardTitle={setText}
