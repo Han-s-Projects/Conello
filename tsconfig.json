@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "allowJs": true,
-    // "alwaysStrict": true,
+    "alwaysStrict": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
@@ -19,7 +19,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    // "strict": true,
+    "strict": true,
     "target": "es5",
     "incremental": true
   },
