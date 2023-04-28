@@ -1,26 +1,27 @@
 import { useEffect, useRef } from "react";
 
 export default function useHorizontalScroll() {
-  const elRef = useRef();
+  const elRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const el = elRef.current as HTMLElement;
+    const el = elRef.current;
 
-    if (el instanceof HTMLElement) {
-      const onWheel = (e) => {
-        if (e.deltaY === 0 || e.target.getElementsByTagName("li").length === 0)
-          return;
-        e.preventDefault();
+    if (!el) return;
 
-        el.scrollTo({
-          left: el.scrollLeft + e.deltaY,
-        });
-      };
+    const handleWheel = (e: WheelEvent) => {
+      const target = e.target as HTMLElement;
+      if (e.deltaY === 0 || target.getElementsByTagName("li").length === 0)
+        return;
+      e.preventDefault();
 
-      el.addEventListener("wheel", onWheel);
+      el.scrollTo({
+        left: el.scrollLeft + e.deltaY,
+      });
+    };
 
-      return () => el.removeEventListener("wheel", onWheel);
-    }
+    el.addEventListener("wheel", handleWheel);
+
+    return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
   return elRef;
