@@ -172,3 +172,17 @@
 :root[color-theme="dark"] .closeBtn {
   background: url("@assets/close-dark.svg");
 }
+
+@media (max-width: 768px) {
+  .container {
+    width: calc(100vw - 768px + 45rem);
+  }
+
+  .descriptionInput {
+    width: calc(100vw - 768px + 34.25rem);
+  }
+
+  .descriptionArea {
+    width: calc(100vw - 768px + 34.25rem);
+  }
+}

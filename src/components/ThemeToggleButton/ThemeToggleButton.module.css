@@ -48,3 +48,33 @@
 :root[color-theme="dark"] .container:hover::before {
   background: url("@assets/sun-toggle.svg");
 }
+
+@media (max-width: 768px) {
+  .container {
+    top: 2.75rem;
+    right: 2rem;
+    padding: 0;
+    width: 1rem;
+    height: 1rem;
+    font-size: 0;
+    background-color: transparent;
+  }
+
+  .container::before {
+    top: 0;
+    left: 0;
+  }
+
+  .container:hover {
+    background-color: transparent;
+  }
+
+  .container:hover::before {
+    top: 0;
+    left: 0;
+  }
+
+  :root[color-theme="dark"] .container:hover {
+    background-color: transparent;
+  }
+}

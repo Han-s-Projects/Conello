@@ -40,3 +40,9 @@
 .btn:focus {
   background-color: var(--color-accent-hover);
 }
+
+@media (max-width: 442px) {
+  .input {
+    width: calc(100vw - 442px + 15rem);
+  }
+}

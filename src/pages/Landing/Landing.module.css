@@ -33,3 +33,9 @@
 .btn:focus {
   background-color: var(--color-accent-hover);
 }
+
+@media (max-width: 768px) {
+  .container {
+    width: calc(100vw - 768px + 40rem);
+  }
+}

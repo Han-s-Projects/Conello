@@ -19,3 +19,17 @@
   font-weight: bold;
   color: var(--color-text-main);
 }
+
+@media (max-width: 768px) {
+  .logout {
+    right: 4rem;
+    width: 22px;
+    height: 22px;
+    font-size: 0;
+    background: url("@assets/logout-dark.svg");
+  }
+
+  :root[color-theme="dark"] .logout {
+    background: url("@assets/logout.svg");
+  }
+}
