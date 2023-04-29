@@ -40,7 +40,7 @@ const ListContainer = ({ lists, setLists, cards, setCards }) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    data-isDragging={
+                    data-isdragging={
                       snapshot.isDragging && !snapshot.isDropAnimating
                     }
                     style={getListStyle(
