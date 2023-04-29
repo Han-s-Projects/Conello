@@ -1,4 +1,4 @@
-const updateTheme = (theme) => {
+const updateTheme = (theme: string) => {
   if (theme === "dark") {
     document.documentElement.setAttribute("color-theme", "dark");
     localStorage.conelloTheme = "dark";
