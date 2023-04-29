@@ -44,7 +44,8 @@ body {
 body {
   margin: 0;
   font-family: "Ubuntu", sans-serif;
-  background: url("./assets/background.svg") no-repeat center/cover;
+  background: url("./assets/background.svg") fixed center center / cover
+    no-repeat;
 }
 
 body::-webkit-scrollbar {
@@ -52,7 +53,8 @@ body::-webkit-scrollbar {
 }
 
 :root[color-theme="dark"] body {
-  background: url("./assets/background-dark.svg") no-repeat center/cover;
+  background: url("./assets/background-dark.svg") fixed center center / cover
+    no-repeat;
 }
 
 ul {
