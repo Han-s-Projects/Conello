@@ -1,25 +1,52 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  SetStateAction,
+  Dispatch,
+  KeyboardEvent,
+  ChangeEvent,
+} from "react";
 import axios from "axios";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+import {
+  Droppable,
+  Draggable,
+  DroppableStateSnapshot,
+  DraggableStateSnapshot,
+  DraggableStyle,
+} from "@hello-pangea/dnd";
 import Form from "@components/Form/Form";
 import Menu from "@components/Menu/Menu";
 import Button from "@components/Button/Button";
 import Card from "@components/Card/Card";
 import styles from "./List.module.css";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "@recoil/atom";
+import TrelloList from "interfaces/TrelloList";
+import TrelloCard from "interfaces/TrelloCard";
 
-const List = ({ list, setLists, cards, setCards }) => {
-  const [cardText, setCardText] = useState("");
-  const [listText, setListText] = useState(list.name);
-  const [editing, setEditing] = useState(false);
-  const [isMenuActive, setIsMenuActive] = useState(false);
-  const token = localStorage.getItem("trello_token");
-  const titleInputRef = useRef(null);
+interface Props {
+  list: TrelloList;
+  setLists: Dispatch<SetStateAction<TrelloList[]>>;
+  cards: TrelloCard[];
+  setCards: Dispatch<SetStateAction<TrelloCard[]>>;
+}
+
+const List = ({ list, setLists, cards, setCards }: Props) => {
+  const [cardText, setCardText] = useState<string>("");
+  const [listText, setListText] = useState<string>(list.name);
+  const [editing, setEditing] = useState<boolean>(false);
+  const [isMenuActive, setIsMenuActive] = useState<boolean>(false);
+  const token = useRecoilValue<string | null>(tokenState);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editing) titleInputRef.current.focus();
+    if (editing && titleInputRef.current) titleInputRef.current.focus();
 
-    const closeMenu = (e) => {
-      if (e.target.innerText !== "" && isMenuActive) setIsMenuActive(false);
+    const closeMenu = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.innerText !== "" && isMenuActive) setIsMenuActive(false);
     };
 
     window.addEventListener("click", closeMenu);
@@ -29,9 +56,10 @@ const List = ({ list, setLists, cards, setCards }) => {
     };
   }, [isMenuActive]);
 
-  const handleCardNameChange = (e) => setCardText(e.target.value);
+  const handleCardNameChange = (e: KeyboardEvent<HTMLInputElement>) =>
+    setCardText((e.target as HTMLInputElement).value);
 
-  const createCard = async (e) => {
+  const createCard = async (e: Event) => {
     e.preventDefault();
 
     if (!cardText.trim()) return;
@@ -44,7 +72,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     setCards((prev) => [...prev, data]);
   };
 
-  const deleteCard = (id) => {
+  const deleteCard = (id: string) => {
     axios.delete(
       `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}`
     );
@@ -52,7 +80,7 @@ const List = ({ list, setLists, cards, setCards }) => {
     setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
-  const deleteList = (id) => {
+  const deleteList = (id: string) => {
     axios.put(
       `https://api.trello.com/1/lists/${id}/closed?key=${process.env.REACT_APP_KEY}&token=${token}&value=true`
     );
@@ -65,9 +93,10 @@ const List = ({ list, setLists, cards, setCards }) => {
     setIsMenuActive(false);
   };
 
-  const handleListNameChange = (e) => setListText(e.target.value);
+  const handleListNameChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setListText((e.target as HTMLInputElement).value);
 
-  const renameList = (id) => {
+  const renameList = (id: string) => {
     if (!listText.trim()) return;
 
     setListText(listText.trim());
@@ -83,16 +112,18 @@ const List = ({ list, setLists, cards, setCards }) => {
     setEditing(false);
   };
 
-  const handleEnter = (e, id) => {
+  const handleEnter = (e: KeyboardEvent<HTMLInputElement>, id: string) => {
     if (e.key === "Enter") renameList(id);
   };
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
-  const getCardStyle = (style, snapshot) => {
-    if (!snapshot.isDropAnimating) {
-      return style;
-    }
+  const getCardStyle = (
+    style: DraggableStyle | undefined,
+    snapshot: DraggableStateSnapshot
+  ) => {
+    if (!snapshot.isDropAnimating) return style;
+    if (!snapshot.dropAnimation) return;
     const { moveTo, curve, duration } = snapshot.dropAnimation;
     const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
     const rotate = "rotate(5deg)";
@@ -105,9 +136,9 @@ const List = ({ list, setLists, cards, setCards }) => {
     };
   };
 
-  const getListStyle = (snapshot) => ({
-    borderRadius: snapshot.isDraggingOver ? "4px" : null,
-    background: snapshot.isDraggingOver ? "#e3eeff" : null,
+  const getListStyle = (snapshot: DroppableStateSnapshot) => ({
+    borderRadius: snapshot.isDraggingOver ? "4px" : undefined,
+    background: snapshot.isDraggingOver ? "#e3eeff" : undefined,
   });
 
   return (
@@ -126,7 +157,7 @@ const List = ({ list, setLists, cards, setCards }) => {
           <h3 className={styles.title}>{list.name}</h3>
         )}
       </div>
-      <button className={styles.menuBtn} onClick={toggleMenu}></button>
+      <button className={styles.menuBtn} onClick={toggleMenu} />
       {isMenuActive ? (
         <Menu>
           <Button func={enterEditMode} />
@@ -150,7 +181,7 @@ const List = ({ list, setLists, cards, setCards }) => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      data-isDragging={
+                      data-isdragging={
                         snapshot.isDragging && !snapshot.isDropAnimating
                       }
                       style={getCardStyle(

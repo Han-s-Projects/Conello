@@ -15,4 +15,9 @@ const themeMode = atom({
   default: getTheme(),
 });
 
+export const tokenState = atom({
+  key: "tokenState",
+  default: localStorage.getItem("trello_token"),
+});
+
 export default themeMode;

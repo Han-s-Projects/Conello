@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import themeMode from "@recoil/atom";
+import themeMode, { tokenState } from "@recoil/atom";
 import updateTheme from "@utils/updateTheme";
 import Header from "@components/Header/Header";
 import Form from "@components/Form/Form";
@@ -14,7 +15,8 @@ const BoardContainer = () => {
   const [boards, setBoards] = useState([]);
   const [boardTitle, setBoardTitle] = useState("");
   const theme = useRecoilValue(themeMode);
-  const token = localStorage.getItem("trello_token");
+  const token = useRecoilValue(tokenState);
+
   const idOrganizations = useLoaderData();
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const BoardContainer = () => {
         `https://api.trello.com/1/organizations/${idOrganizations}/boards?key=${process.env.REACT_APP_KEY}&token=${token}&filter=open`
       );
 
-      setBoards(data.map(({ id, name }, i) => ({ id, name, i })));
+      setBoards(data.map(({ id, name }, i: number) => ({ id, name, i })));
     };
 
     fetchData();
@@ -35,7 +37,7 @@ const BoardContainer = () => {
     setBoardTitle(e.target.value);
   };
 
-  const createBoard = async (e) => {
+  const createBoard = async (e: Event) => {
     e.preventDefault();
 
     const { data } = await axios.post(

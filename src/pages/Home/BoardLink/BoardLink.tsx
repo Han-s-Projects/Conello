@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import Menu from "@components/Menu/Menu";
 import Button from "@components/Button/Button";
 import styles from "./BoardLink.module.css";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "@recoil/atom";
 
 const BoardItem = ({ id, name, setBoards }) => {
   const [boardTitle, setBoardTitle] = useState(name);
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [editing, setEditing] = useState(false);
-  const token = localStorage.getItem("trello_token");
+  const token = useRecoilValue(tokenState);
   const titleInputRef = useRef(null);
 
   useEffect(() => {

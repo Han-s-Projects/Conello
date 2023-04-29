@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Header from "@components/Header/Header";
 import ToggleTheme from "@components/ThemeToggleButton/ThemeToggleButton";
 import styles from "./NotFound.module.css";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "@recoil/atom";
 
 const NotFound = () => {
   const navigate = useNavigate();
+  const token = useRecoilValue(tokenState);
   const ReturnToHome = () => {
-    localStorage.getItem("trello_token") ? navigate("/boards") : navigate("/");
+    token ? navigate("/boards") : navigate("/");
   };
   return (
     <>

@@ -1,25 +1,34 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { DragDropContext, DraggableLocation, TypeId } from "@hello-pangea/dnd";
 import { useParams, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import themeMode from "@recoil/atom";
+import themeMode, { tokenState } from "@recoil/atom";
 import updateTheme from "@utils/updateTheme";
 import Header from "@components/Header/Header";
 import Form from "@components/Form/Form";
 import ListContainer from "./ListContainer";
 import ToggleTheme from "@components/ThemeToggleButton/ThemeToggleButton";
 import styles from "./Board.module.css";
+import TrelloCard from "interfaces/TrelloCard";
+import TrelloList from "interfaces/TrelloList";
+
+interface DraggableLocationWithRubric {
+  source: DraggableLocation;
+  destination: DraggableLocation | null;
+  type: TypeId;
+}
 
 const Board = () => {
-  const [lists, setLists] = useState([]);
-  const [cards, setCards] = useState([]);
+  const [lists, setLists] = useState<TrelloList[]>([]);
+  const [cards, setCards] = useState<TrelloCard[]>([]);
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const theme = useRecoilValue(themeMode);
   const { boardTitle } = useLocation().state;
-  const token = localStorage.getItem("trello_token");
+  const token = useRecoilValue(tokenState);
 
   useEffect(() => {
     updateTheme(theme);
@@ -36,15 +45,12 @@ const Board = () => {
         .then((results) => {
           const _lists = results
             .map((result) => {
-              console.log(result);
               return result.status === "fulfilled" ? result.value.data : null;
             })
             .filter((v) => v);
           return _lists;
         })
         .then(([lists, cards]) => {
-          console.log(lists, cards);
-
           setIsLoading(false);
           setLists(lists);
           setCards(cards);
@@ -57,9 +63,10 @@ const Board = () => {
     }
   }, []);
 
-  const handleChange = (e) => setText(e.target.value);
+  const handleChange = (e: Event) =>
+    setText((e.target as HTMLFormElement).value);
 
-  const createList = async (e) => {
+  const createList = async (e: Event) => {
     e.preventDefault();
 
     if (!text.trim()) return;
@@ -73,7 +80,7 @@ const Board = () => {
   };
 
   const onDragEnd = useCallback(
-    ({ source, destination, type }) => {
+    ({ source, destination, type }: DraggableLocationWithRubric) => {
       if (
         !destination ||
         (source.index === destination.index &&

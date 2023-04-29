@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "@components/Header/Header";
 import ToggleTheme from "@components/ThemeToggleButton/ThemeToggleButton";
 import styles from "./Landing.module.css";
+import { useRecoilState } from "recoil";
+import { tokenState } from "@recoil/atom";
 
 declare global {
   interface Window {
@@ -13,14 +15,16 @@ declare global {
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [token, setToken] = useRecoilState(tokenState);
 
   useLayoutEffect(() => {
-    if (localStorage.getItem("trello_token")) navigate("/boards");
+    if (token) navigate("/boards");
   }, [navigate]);
 
   const handleAuthentification = () => {
     const authenticationSuccess = async () => {
       const token = localStorage.getItem("trello_token");
+      setToken(token);
 
       const { data } = await axios.get(
         `https://api.trello.com/1/members/me/?key=${process.env.REACT_APP_KEY}&token=${token}`

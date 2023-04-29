@@ -1,6 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  KeyboardEvent,
+  ChangeEvent,
+} from "react";
 import axios from "axios";
 import styles from "./Description.module.css";
+import TrelloCard from "interfaces/TrelloCard";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "@recoil/atom";
+
+interface Props {
+  close: () => void;
+  listTitle: string;
+  cardTitle: string;
+  setCardTitle: Dispatch<SetStateAction<string>>;
+  setCards: Dispatch<SetStateAction<TrelloCard[]>>;
+  card: TrelloCard;
+  description: string;
+  setDescription: Dispatch<SetStateAction<string>>;
+}
 
 const Description = ({
   close,
@@ -11,18 +33,18 @@ const Description = ({
   card,
   description,
   setDescription,
-}) => {
+}: Props) => {
   const [textareaEditing, setTextareaEditing] = useState(false);
   const [titleEditing, setTitleEditing] = useState(false);
-  const token = localStorage.getItem("trello_token");
-  const cardTitleInputRef = useRef(null);
-  const textareaRef = useRef(null);
+  const token = useRecoilValue(tokenState);
+  const cardTitleInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const enterTitleEdit = () => {
     setTitleEditing(true);
   };
 
-  const renameCard = (id) => {
+  const renameCard = (id: string) => {
     if (!cardTitle.trim()) return;
 
     setCardTitle(cardTitle.trim());
@@ -32,22 +54,24 @@ const Description = ({
       `https://api.trello.com/1/cards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${cardTitle}`
     );
 
-    setCards((prev) =>
+    setCards((prev: TrelloCard[]) =>
       prev.map((c) => (c.id === card.id ? { ...c, name: cardTitle } : c))
     );
   };
 
-  const handleEnter = (e, id) => {
+  const handleEnter = (e: KeyboardEvent<HTMLInputElement>, id: string) => {
     if (e.key === "Enter") renameCard(id);
   };
 
-  const handleCardTitleChange = (e) => setCardTitle(e.target.value);
+  const handleCardTitleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setCardTitle(e.target.value);
 
   const openTextarea = () => setTextareaEditing(true);
 
   const closeTextArea = () => setTextareaEditing(false);
 
-  const handleDescChange = (e) => setDescription(e.target.value);
+  const handleDescChange = (e: ChangeEvent<HTMLTextAreaElement>) =>
+    setDescription(e.target.value);
 
   const updateDescription = () => {
     axios.put(
@@ -60,8 +84,9 @@ const Description = ({
   };
 
   useEffect(() => {
-    if (titleEditing) cardTitleInputRef.current.focus();
-    if (textareaEditing) textareaRef.current.focus();
+    if (titleEditing && cardTitleInputRef.current)
+      cardTitleInputRef.current.focus();
+    if (textareaEditing && textareaRef.current) textareaRef.current.focus();
   }, [titleEditing, textareaEditing]);
 
   return (
