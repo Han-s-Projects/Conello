@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRecoilValue } from "recoil";
 import TrelloCard from "interfaces/TrelloCard";
 import themeMode from "@recoil/atom";
@@ -9,7 +9,7 @@ import styles from "./Card.module.css";
 interface Props {
   card: TrelloCard;
   onDelete: () => void;
-  setCards: () => [];
+  setCards: Dispatch<SetStateAction<TrelloCard[]>>;
   listTitle: string;
 }
 
