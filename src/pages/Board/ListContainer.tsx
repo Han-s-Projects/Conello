@@ -1,13 +1,29 @@
-import React from "react";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+import React, { Dispatch, SetStateAction } from "react";
+import {
+  Droppable,
+  Draggable,
+  DraggableStyle,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
 import useHorizontalScroll from "@hooks/useHorizontalScroll";
 import List from "@pages/Board/List";
 import styles from "./ListContainer.module.css";
+import TrelloList from "interfaces/TrelloList";
+import TrelloCard from "interfaces/TrelloCard";
 
-const getListStyle = (style, snapshot) => {
-  if (!snapshot.isDropAnimating) {
-    return style;
-  }
+interface Props {
+  lists: TrelloList[];
+  setLists: Dispatch<SetStateAction<TrelloList[]>>;
+  cards: TrelloCard[];
+  setCards: Dispatch<SetStateAction<TrelloCard[]>>;
+}
+
+const getListStyle = (
+  style: DraggableStyle | undefined,
+  snapshot: DraggableStateSnapshot
+) => {
+  if (!snapshot.isDropAnimating) return style;
+  if (!snapshot.dropAnimation) return;
   const { moveTo, curve, duration } = snapshot.dropAnimation;
   const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
   const rotate = "rotate(5deg)";
@@ -20,7 +36,7 @@ const getListStyle = (style, snapshot) => {
   };
 };
 
-const ListContainer = ({ lists, setLists, cards, setCards }) => {
+const ListContainer = ({ lists, setLists, cards, setCards }: Props) => {
   const scrollRef = useHorizontalScroll();
 
   return (

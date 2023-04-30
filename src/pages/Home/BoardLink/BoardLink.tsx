@@ -1,21 +1,36 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import axios from "axios";
+import TrelloBoard from "interfaces/TrelloBoard";
+import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 import Menu from "@components/Menu/Menu";
 import Button from "@components/Button/Button";
-import styles from "./BoardLink.module.css";
-import { useRecoilValue } from "recoil";
 import { tokenState } from "@recoil/atom";
+import styles from "./BoardLink.module.css";
 
-const BoardItem = ({ id, name, setBoards }) => {
+interface Props {
+  id: string;
+  name: string;
+  setBoards: Dispatch<SetStateAction<TrelloBoard[]>>;
+}
+
+const BoardItem = ({ id, name, setBoards }: Props) => {
   const [boardTitle, setBoardTitle] = useState(name);
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [editing, setEditing] = useState(false);
   const token = useRecoilValue(tokenState);
-  const titleInputRef = useRef(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editing) titleInputRef.current.focus();
+    if (editing && titleInputRef.current) titleInputRef.current.focus();
   }, [editing]);
 
   const enterEditMode = () => {
@@ -33,12 +48,13 @@ const BoardItem = ({ id, name, setBoards }) => {
 
   const toggleMenu = () => setIsMenuActive((prev) => !prev);
 
-  const handleBoardNameChange = (e) => setBoardTitle(e.target.value);
+  const handleBoardNameChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setBoardTitle(e.target.value.trim());
 
-  const renameBoard = (id) => {
-    if (!boardTitle.trim()) return;
-
-    setBoardTitle(boardTitle.trim());
+  const renameBoard = (id: string) => {
+    if (!boardTitle) return;
+    const newName = boardTitle.trim();
+    setBoardTitle(newName);
 
     axios.put(
       `https://api.trello.com/1/boards/${id}?key=${process.env.REACT_APP_KEY}&token=${token}&name=${boardTitle}`
@@ -46,14 +62,14 @@ const BoardItem = ({ id, name, setBoards }) => {
 
     setBoards((prev) =>
       prev.map((board) =>
-        board.id === id ? { ...board, name: boardTitle } : board
+        board.id === id ? { ...board, name: newName } : board
       )
     );
 
     setEditing(false);
   };
 
-  const handleEnter = (e, id) => {
+  const handleEnter = (e: KeyboardEvent<HTMLInputElement>, id: string) => {
     if (e.key === "Enter") renameBoard(id);
   };
 

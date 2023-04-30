@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -10,9 +10,15 @@ import Form from "@components/Form/Form";
 import BoardLink from "./BoardLink/BoardLink";
 import ToggleTheme from "@components/ThemeToggleButton/ThemeToggleButton";
 import styles from "./BoardContainer.module.css";
+import TrelloBoard from "interfaces/TrelloBoard";
+
+interface DataProps {
+  id: string;
+  name: string;
+}
 
 const BoardContainer = () => {
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState<TrelloBoard[]>([]);
   const [boardTitle, setBoardTitle] = useState("");
   const theme = useRecoilValue(themeMode);
   const token = useRecoilValue(tokenState);
@@ -27,13 +33,19 @@ const BoardContainer = () => {
         `https://api.trello.com/1/organizations/${idOrganizations}/boards?key=${process.env.REACT_APP_KEY}&token=${token}&filter=open`
       );
 
-      setBoards(data.map(({ id, name }, i: number) => ({ id, name, i })));
+      setBoards(
+        data.map(({ id, name }: DataProps, i: number) => ({
+          id,
+          name,
+          i,
+        }))
+      );
     };
 
     fetchData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setBoardTitle(e.target.value);
   };
 
